@@ -1,4 +1,4 @@
-package vite.mvp.api;
+package vite.mvp.api.service;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -10,7 +10,7 @@ import vite.mvp.bean.UserInfo;
  */
 
 public interface ApiService {
-    String BASE_API_URL = "https://api.github.com/";
+    String BASE_URL = "https://api.github.com/";
 
     @GET("/users/{username}")
     Observable<UserInfo> getUserInfo(@Path("username") String userName);

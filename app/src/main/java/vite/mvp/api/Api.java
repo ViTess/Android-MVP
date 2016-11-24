@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -16,6 +18,8 @@ import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+import vite.mvp.api.service.ApiService;
 
 /**
  * Created by trs on 16-10-18.
@@ -24,19 +28,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Api {
     private static final long CAHCE_SIZE = 100 * 1024 * 1024;//100m缓存大小
 
-    private static Api instance;
     private static Context sContext;
+    private static final ConcurrentMap<Class, Api> sApiCache = new ConcurrentHashMap<>();
 
-    public static Api getInstance() {
-        if (instance == null) {
-            synchronized (Api.class) {
-                if (instance == null) {
-                    Api temp = new Api();
-                    instance = temp;
-                }
-            }
+    public static <T> T getService(Class<T> classType) {
+        Api api = sApiCache.get(classType);
+        if (api == null) {
+            api = new Api(classType);
+            sApiCache.putIfAbsent(classType, api);
         }
-        return instance;
+        return (T) api.getService();
     }
 
     public static void setApplicationContext(Context context) {
@@ -46,18 +47,23 @@ public class Api {
     private Retrofit mRetrofit;
     private Cache mCache;
     private OkHttpClient mOkHttpClient;
-    private ApiService mApiService;
+    private Object mService;
 
-    private Api() {
+    private Api(Class classType) {
         initClient();
-        mRetrofit = new Retrofit.Builder()
-                .baseUrl(ApiService.BASE_API_URL)
+        Retrofit.Builder builder = new Retrofit.Builder()
                 .client(mOkHttpClient)
-//                .addConverterFactory(StringConverterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
-                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
-                .build();
-        mApiService = mRetrofit.create(ApiService.class);
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create());
+
+        if (ApiService.class.equals(classType))
+            builder.baseUrl(ApiService.BASE_URL);
+        else
+            return;
+
+        mRetrofit = builder.build();
+        mService = mRetrofit.create(classType);
     }
 
     private void initClient() {
@@ -90,39 +96,11 @@ public class Api {
             }
     }
 
-    public ApiService getService() {
-        return mApiService;
+    public Object getService() {
+        return mService;
     }
 
     public <T> T create(Class<T> t) {
         return mRetrofit.create(t);
-    }
-
-    /**
-     * retrofit 2.0下返回string会异常，需要加入该string转换，一般用作测试，正常开发应返回gson的entity
-     */
-    public static final class StringConverterFactory extends Converter.Factory {
-        public static StringConverterFactory create() {
-            return new StringConverterFactory();
-        }
-
-        @Override
-        public Converter<ResponseBody, ?> responseBodyConverter(Type type, Annotation[] annotations, Retrofit retrofit) {
-            return new ConfigurationServiceConverter();
-        }
-
-        final class ConfigurationServiceConverter implements Converter<ResponseBody, String> {
-
-            @Override
-            public String convert(ResponseBody value) throws IOException {
-                BufferedReader r = new BufferedReader(new InputStreamReader(value.byteStream()));
-                StringBuilder total = new StringBuilder();
-                String line;
-                while ((line = r.readLine()) != null) {
-                    total.append(line);
-                }
-                return total.toString();
-            }
-        }
     }
 }
