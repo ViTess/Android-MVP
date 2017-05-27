@@ -1,21 +1,22 @@
-package vite.mvp.api;
+package vite.api;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
-import vite.mvp.util.NetworkUtil;
+import vite.common.LogUtil;
+import vite.common.NetworkUtil;
 
 /**
  * 提供各种拦截器
  * Created by trs on 16-9-20.
  */
-public class Interceptors {
+final class Interceptors {
 
     /**
      * 打印用
@@ -32,15 +33,15 @@ public class Interceptors {
             Request request = chain.request();
 
             long t1 = System.nanoTime();
-            Log.i(tag, String.format("Sending request %s on %s%n%s",
-                    request.url(), chain.connection(), request.headers()));
+            LogUtil.i(tag, String.format("Sending request %s on %s%n%s\n%s",
+                    request.url(), chain.connection(), request.headers(), request.body()));
 
             Response response = chain.proceed(request);
 
             long t2 = System.nanoTime();
-            Log.i(tag, String.format("Received response for %s in %.1fms%n%s",
-                    response.request().url(), (t2 - t1) / 1e6d, response.headers()));
-
+            LogUtil.i(tag, String.format("Received response for %s in %.1fms%n%s\n%s",
+                    response.request().url(), (t2 - t1) / 1e6d, response.headers(), request.body()));
+            LogUtil.i(tag, "currentThread:" + Thread.currentThread());
             return response;
         }
     }
@@ -95,6 +96,41 @@ public class Interceptors {
         @Override
         public Response intercept(Chain chain) throws IOException {
             return null;
+        }
+    }
+
+    /**
+     * 存储Cookie
+     */
+    public static final class SaveCookiesInterceptor implements Interceptor {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Response originalResponse = chain.proceed(chain.request());
+
+            if (!originalResponse.headers("Set-Cookie").isEmpty()) {
+                HashSet<String> cookies = new HashSet<>();
+                for (String header : originalResponse.headers("Set-Cookie")) {
+                    cookies.add(header);
+                }
+                //TODO:将cookie持久化保存
+            }
+            return originalResponse;
+        }
+    }
+
+    /**
+     * 读取cookie
+     */
+    public static final class ReadCookiesInterceptor implements Interceptor {
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Request.Builder builder = chain.request().newBuilder();
+            HashSet<String> preferences =/* TODO:从保存的cookie中获取 */ null;
+            for (String cookie : preferences) {
+                builder.addHeader("Cookie", cookie);
+                LogUtil.v("OkHttp", "Adding Header: " + cookie);
+            }
+            return chain.proceed(builder.build());
         }
     }
 }

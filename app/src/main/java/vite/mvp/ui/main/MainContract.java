@@ -1,10 +1,10 @@
 package vite.mvp.ui.main;
 
-import rx.Observable;
+import io.reactivex.Observable;
+import vite.data.entity.UserInfo;
 import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
 import vite.mvp.base.BaseView;
-import vite.mvp.bean.UserInfo;
 
 /**
  * Created by trs on 16-10-18.
@@ -16,11 +16,9 @@ public interface MainContract {
     }
 
     interface View extends BaseView {
-        void showUserInfo(UserInfo info);
-
-        void showLoading(boolean isShow);
-
-        void showResultState(boolean isSuccessful);
+        void showLoading();
+        void showLoadUserInfoSuccess(UserInfo info);
+        void showLoadUserInfoFailure();
     }
 
     abstract class Presenter extends BasePresenter<Model, View> {

@@ -1,14 +1,15 @@
-package vite.mvp.util;
+package vite.common;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
- * Created by trs on 16-10-18.
+ * Created by trs on 17-5-27.
  */
 
 public class NetworkUtil {
+    private final static String TAG = "NetworkUtil";
 
     public static final boolean isNetworkConnecting(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
@@ -19,5 +20,4 @@ public class NetworkUtil {
         }
         return (current.isAvailable());
     }
-
 }

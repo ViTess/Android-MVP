@@ -16,10 +16,10 @@ public class BaseFragment extends Fragment {
     protected Activity activity;
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        this.activity = activity;
+    public void onAttach(Context context) {
+        super.onAttach(context);
         this.context = activity;
+        this.activity = getActivity();
     }
 
     @Override

@@ -1,4 +1,4 @@
-package vite.mvp.util;
+package vite.common;
 
 import java.lang.reflect.ParameterizedType;
 

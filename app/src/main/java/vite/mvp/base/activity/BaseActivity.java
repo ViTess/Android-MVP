@@ -13,7 +13,7 @@ public class BaseActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         context = this;
+        super.onCreate(savedInstanceState);
     }
 }

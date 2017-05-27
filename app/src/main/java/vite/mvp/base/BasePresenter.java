@@ -1,15 +1,15 @@
 package vite.mvp.base;
 
-import rx.Subscription;
-import rx.subscriptions.CompositeSubscription;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by trs on 16-10-18.
  */
 public abstract class BasePresenter<M, T> {
-    public M mModel;
+    protected M mModel;
     public T mView;
-    private CompositeSubscription mCompositeSubscription = new CompositeSubscription();
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     public void setModelAndView(M model, T view) {
         mModel = model;
@@ -17,28 +17,32 @@ public abstract class BasePresenter<M, T> {
     }
 
     public void onDestory() {
-        if (mCompositeSubscription != null && !mCompositeSubscription.isUnsubscribed())
-            mCompositeSubscription.unsubscribe();
+        removeAllDispose();
     }
 
     /**
-     * 将Subscription加入记录，最后退出时会自动清除Subscription
+     * Disposable，最后退出时会自动清除Disposable
      *
-     * @param s
+     * @param d
      */
-    public void addSubscription(Subscription s) {
-        if (mCompositeSubscription != null)
-            mCompositeSubscription.add(s);
+    public void addDispose(Disposable d) {
+        if (mCompositeDisposable != null)
+            mCompositeDisposable.add(d);
     }
 
     /**
-     * 将Subscription从记录中去除，这样退出activity时不会自动unsubscribe
+     * 将Disposable从记录中去除，这样退出activity时不会自动dispose
      *
-     * @param s
+     * @param d
      */
-    public void removeSubscription(Subscription s) {
-        if (mCompositeSubscription != null)
-            mCompositeSubscription.remove(s);
+    public void removeDispose(Disposable d) {
+        if (mCompositeDisposable != null)
+            mCompositeDisposable.remove(d);
+    }
+
+    public void removeAllDispose() {
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
     }
 
     public abstract void subscribe();

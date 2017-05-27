@@ -1,10 +1,11 @@
-package vite.mvp.bean;
+package vite.data.entity;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
- *
+ * Created by trs on 17-5-27.
  */
+
 public class UserInfo {
 
     /**
@@ -376,4 +377,5 @@ public class UserInfo {
                 ", updatedAt='" + updatedAt + '\'' +
                 '}';
     }
+
 }

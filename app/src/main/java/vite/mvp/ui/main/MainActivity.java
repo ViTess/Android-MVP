@@ -1,17 +1,15 @@
 package vite.mvp.ui.main;
 
 import android.app.ProgressDialog;
-import android.support.annotation.NonNull;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
+import vite.data.entity.UserInfo;
 import vite.mvp.R;
 import vite.mvp.base.fragmentActivity.MVPFragmentActivity;
-import vite.mvp.bean.UserInfo;
+import vite.mvp.util.ToastUtil;
 
 public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> implements MainContract.View {
 
@@ -35,27 +33,23 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
     }
 
     @Override
-    public void showUserInfo(UserInfo info) {
+    public void showLoading() {
+        pDialog.show();
+    }
+
+    @Override
+    public void showLoadUserInfoSuccess(UserInfo info) {
         tv_main.setText(info.toString());
+        pDialog.dismiss();
+        rl_main.setEnabled(false);
+        ToastUtil.showShort("fetch data success!");
     }
 
     @Override
-    public void showLoading(boolean isShow) {
-        if (isShow)
-            pDialog.show();
-        else
-            pDialog.dismiss();
-    }
-
-    @Override
-    public void showResultState(boolean isSuccessful) {
-        if (isSuccessful) {
-            rl_main.setEnabled(false);
-            Toast.makeText(context, "fetch data success!", Toast.LENGTH_SHORT).show();
-        } else {
-            rl_main.setEnabled(true);
-            tv_main.setText("Oh, something went wrong, please try again");
-        }
+    public void showLoadUserInfoFailure() {
+        pDialog.dismiss();
+        rl_main.setEnabled(true);
+        tv_main.setText("Oh, something went wrong, please try again");
     }
 
     @OnClick(R.id.main_relative)

@@ -7,10 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import vite.common.TUtil;
 import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
 import vite.mvp.base.BaseView;
-import vite.mvp.util.TUtil;
 
 /**
  * Created by trs on 16-11-4.
@@ -18,7 +18,6 @@ import vite.mvp.util.TUtil;
 
 public abstract class MVPFragment<T extends BasePresenter, E extends BaseModel> extends BaseFragment {
     public T mPresenter;
-    public E mModel;
 
     @Nullable
     @Override
@@ -31,9 +30,9 @@ public abstract class MVPFragment<T extends BasePresenter, E extends BaseModel> 
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         mPresenter = TUtil.getT(this, 0);
-        mModel = TUtil.getT(this, 1);
+        E model = TUtil.getT(this, 1);
         if (this instanceof BaseView) {
-            mPresenter.setModelAndView(mModel, this);
+            mPresenter.setModelAndView(model, this);
             mPresenter.subscribe();
         }
         init();
