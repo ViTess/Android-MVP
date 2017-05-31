@@ -52,9 +52,10 @@ public class API {
         initClient();
         Retrofit.Builder builder = new Retrofit.Builder()
                 .client(mOkHttpClient)
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(ScalarsConverterFactory.create())//支持json -> string
+                .addConverterFactory(GsonConverterFactory.create())//支持json -> 实体类
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
+
         if (ApiService.class.equals(c))
             builder.baseUrl(ApiService.BASE_URL);
         else

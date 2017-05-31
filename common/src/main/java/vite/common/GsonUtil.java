@@ -8,6 +8,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 
 /**
+ * 提供Gson的序列化、反序列化等相关操作
  * Created by trs on 16-11-17.
  */
 
