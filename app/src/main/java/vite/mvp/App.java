@@ -6,6 +6,7 @@ import android.content.Context;
 import com.bumptech.glide.Glide;
 
 import vite.api.API;
+import vite.data.DbManager;
 
 /**
  * Created by trs on 16-10-18.
@@ -19,7 +20,10 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         sApp = this;
+
+
         API.setApplicationContext(this);
+        DbManager.init(this);
         Glide.get(this);
     }
 

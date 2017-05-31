@@ -1,10 +1,14 @@
 package vite.mvp.ui.main;
 
+import org.greenrobot.greendao.rx.RxDao;
+
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import vite.common.LogUtil;
+import vite.data.DbManager;
+import vite.data.entity.UserAccount;
 import vite.data.entity.UserInfo;
 
 /**

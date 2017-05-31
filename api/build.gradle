@@ -9,8 +9,6 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
-
-        consumerProguardFiles 'proguard-rules.pro'
     }
     buildTypes {
         release {
@@ -22,8 +20,6 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile project(':common')
-    compile project(':data')
     compile deps.rxjava
     compile deps.rxandroid
     compile deps.retrofit

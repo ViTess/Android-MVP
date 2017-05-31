@@ -46,3 +46,59 @@ ext {
             "greendao"                  : 'org.greenrobot:greendao:3.2.2'
     ]
 }
+
+subprojects { project ->
+    if (project.name != ('app')) {
+        apply plugin: 'com.android.library'
+        android {
+            publishNonDefault true
+            defaultConfig{
+                consumerProguardFiles 'proguard-rules.pro'
+            }
+        }
+    }
+}
+
+project(':app') {
+    apply plugin: 'com.android.application'
+        dependencies {
+            releaseCompile project(path: ':api', configuration: 'release')
+            debugCompile project(path: ':api', configuration: 'debug')
+
+            releaseCompile project(path: ':common', configuration: 'release')
+            debugCompile project(path: ':common', configuration: 'debug')
+
+            releaseCompile project(path: ':data', configuration: 'release')
+            debugCompile project(path: ':data', configuration: 'debug')
+
+            releaseCompile project(path: ':widget', configuration: 'release')
+            debugCompile project(path: ':widget', configuration: 'debug')
+        }
+}
+
+project(':api'){
+    apply plugin: 'com.android.library'
+    dependencies {
+        releaseCompile project(path: ':common', configuration: 'release')
+        debugCompile project(path: ':common', configuration: 'debug')
+
+        releaseCompile project(path: ':data', configuration: 'release')
+        debugCompile project(path: ':data', configuration: 'debug')
+    }
+}
+
+project(':data'){
+    apply plugin: 'com.android.library'
+    dependencies {
+        releaseCompile project(path: ':common', configuration: 'release')
+        debugCompile project(path: ':common', configuration: 'debug')
+    }
+}
+
+project(':widget'){
+    apply plugin: 'com.android.library'
+    dependencies {
+        releaseCompile project(path: ':common', configuration: 'release')
+        debugCompile project(path: ':common', configuration: 'debug')
+    }
+}
