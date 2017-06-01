@@ -59,6 +59,7 @@ subprojects { project ->
     }
 }
 
+// if use android studio 3.0+ ,just replace to "implementation project(':foo')"
 project(':app') {
     apply plugin: 'com.android.application'
         dependencies {

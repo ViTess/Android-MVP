@@ -15,11 +15,21 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug{
+            minifyEnabled false
+            applicationIdSuffix ".debug"
+        }
     }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    fileTree(dir: 'libs', include: '*.aar').each { File file ->
+        dependencies.add("compile", [
+                name: file.name.lastIndexOf('.').with { it != -1 ? file.name[0..<it] : file.name },
+                ext : 'aar'
+        ])
+    }
 
     compile deps.support_v7
     compile deps.support_v4

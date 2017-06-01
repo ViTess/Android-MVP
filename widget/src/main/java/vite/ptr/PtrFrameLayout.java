@@ -266,9 +266,13 @@ public class PtrFrameLayout extends ViewGroup {
             addView(mContent);
         }
         if (mHeaderView != null) {
+            if (mHeaderView instanceof PtrUIHandler)
+                addPtrUIHandler((PtrUIHandler) mHeaderView);
             mHeaderView.bringToFront();
         }
         if (mFooterView != null) {
+            if (mFooterView instanceof PtrUIHandler)
+                addPtrUIHandler((PtrUIHandler) mFooterView);
             mFooterView.bringToFront();
         }
         super.onFinishInflate();
