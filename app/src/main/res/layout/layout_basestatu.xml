@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:id="@+id/layout_basestatu_root_fl"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+    
+    <!-- first layout node is main layout -->
+
+    <!-- second layout node is all about state layout -->
+
+</FrameLayout>
