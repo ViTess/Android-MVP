@@ -9,10 +9,3 @@
 - ButterKnife
 etc.
 
-Update
---------
-
-#### 16.11.24
-    
-1. 增加支持String的Converter
-2. 增加多Api地址支持

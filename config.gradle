@@ -6,8 +6,10 @@ ext {
     minSdkVersion = 15
     targetSdkVersion = 21
 
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    //如果使用android studio 3.0，则可以使用java8
+    //而且不需要用jack编译，因为android studio 3.0使用desugar工具来代替jack
+    sourceCompatibility = JavaVersion.VERSION_1_7
+    targetCompatibility = JavaVersion.VERSION_1_7
 
     deps = [
             //android support
