@@ -46,6 +46,7 @@ public class MainPresenter extends MainContract.Presenter {
                     public void accept(@NonNull Throwable throwable) throws Exception {
                         //onError
                         mView.showLoadUserInfoFailure();
+                        throwable.printStackTrace();
                     }
                 }, new Action() {
                     @Override

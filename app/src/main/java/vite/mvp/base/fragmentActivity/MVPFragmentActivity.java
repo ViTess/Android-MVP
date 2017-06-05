@@ -7,6 +7,7 @@ import vite.common.TUtil;
 import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
 import vite.mvp.base.BaseView;
+import vite.mvp.util.PageStateHelper;
 
 /**
  * Created by trs on 16-11-4.
@@ -14,11 +15,17 @@ import vite.mvp.base.BaseView;
 public abstract class MVPFragmentActivity<T extends BasePresenter, E extends BaseModel> extends BaseFragmentActivity {
     public T mPresenter;
 
+    protected PageStateHelper mPageStateHelper = PageStateHelper.NONE;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(getLayoutId());
+        final int layoutId = getLayoutId();
+        if (mPageStateHelper != null && mPageStateHelper.getView() != null)
+            setContentView(mPageStateHelper.getView());
+        else
+            setContentView(layoutId);
 
         ButterKnife.bind(this);
         mPresenter = TUtil.getT(this, 0);
@@ -37,10 +44,14 @@ public abstract class MVPFragmentActivity<T extends BasePresenter, E extends Bas
             mPresenter.unsubscribe();
             mPresenter.onDestory();
         }
+
+        if (mPageStateHelper != null)
+            mPageStateHelper.clear();
     }
 
     /**
      * 设置layout id
+     * 如要使用PageStateHelper请在getLayoutId里初始化
      *
      * @return
      */

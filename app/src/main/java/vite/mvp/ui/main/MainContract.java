@@ -5,6 +5,7 @@ import vite.data.entity.UserInfo;
 import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
 import vite.mvp.base.BaseView;
+import vite.mvp.util.PageStateHelper;
 
 /**
  * Created by trs on 16-10-18.
@@ -15,8 +16,7 @@ public interface MainContract {
         Observable<UserInfo> getUserInfo(String userName);
     }
 
-    interface View extends BaseView {
-        void showLoading();
+    interface View extends BaseView ,PageStateHelper.PageState{
         void showLoadUserInfoSuccess(UserInfo info);
         void showLoadUserInfoFailure();
     }

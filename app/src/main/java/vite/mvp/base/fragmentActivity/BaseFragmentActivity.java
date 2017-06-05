@@ -11,12 +11,12 @@ import android.support.v4.app.FragmentManager;
 
 public class BaseFragmentActivity extends FragmentActivity {
     protected Context context;
-    protected FragmentManager fragmentManager;
+    protected FragmentManager mFragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
-        fragmentManager = getSupportFragmentManager();
+        mFragmentManager = getSupportFragmentManager();
     }
 }

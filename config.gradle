@@ -45,7 +45,10 @@ ext {
             "glide_okhttp"              : 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar',
             "glide_transformation"      : 'jp.wasabeef:glide-transformations:2.0.2',
 
-            "greendao"                  : 'org.greenrobot:greendao:3.2.2'
+            "greendao"                  : 'org.greenrobot:greendao:3.2.2',
+
+            //test
+            "android_test"              : 'com.android.support.test.espresso:espresso-core:2.2.2'
     ]
 }
 
@@ -54,7 +57,7 @@ subprojects { project ->
         apply plugin: 'com.android.library'
         android {
             publishNonDefault true
-            defaultConfig{
+            defaultConfig {
                 consumerProguardFiles 'proguard-rules.pro'
             }
         }
@@ -64,22 +67,31 @@ subprojects { project ->
 // if use android studio 3.0+ ,just replace to "implementation project(':foo')"
 project(':app') {
     apply plugin: 'com.android.application'
-        dependencies {
-            releaseCompile project(path: ':api', configuration: 'release')
-            debugCompile project(path: ':api', configuration: 'debug')
-
-            releaseCompile project(path: ':common', configuration: 'release')
-            debugCompile project(path: ':common', configuration: 'debug')
-
-            releaseCompile project(path: ':data', configuration: 'release')
-            debugCompile project(path: ':data', configuration: 'debug')
-
-            releaseCompile project(path: ':widget', configuration: 'release')
-            debugCompile project(path: ':widget', configuration: 'debug')
+    android {
+        defaultConfig {
+            testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         }
+    }
+    dependencies {
+        releaseCompile project(path: ':api', configuration: 'release')
+        debugCompile project(path: ':api', configuration: 'debug')
+
+        releaseCompile project(path: ':common', configuration: 'release')
+        debugCompile project(path: ':common', configuration: 'debug')
+
+        releaseCompile project(path: ':data', configuration: 'release')
+        debugCompile project(path: ':data', configuration: 'debug')
+
+        releaseCompile project(path: ':widget', configuration: 'release')
+        debugCompile project(path: ':widget', configuration: 'debug')
+
+        androidTestCompile(deps.android_test, {
+            exclude group: 'com.android.support', module: 'support-annotations'
+        })
+    }
 }
 
-project(':api'){
+project(':api') {
     apply plugin: 'com.android.library'
     dependencies {
         releaseCompile project(path: ':common', configuration: 'release')
@@ -90,7 +102,7 @@ project(':api'){
     }
 }
 
-project(':data'){
+project(':data') {
     apply plugin: 'com.android.library'
     dependencies {
         releaseCompile project(path: ':common', configuration: 'release')
@@ -98,7 +110,7 @@ project(':data'){
     }
 }
 
-project(':widget'){
+project(':widget') {
     apply plugin: 'com.android.library'
     dependencies {
         releaseCompile project(path: ':common', configuration: 'release')

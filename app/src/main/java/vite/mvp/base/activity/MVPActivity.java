@@ -7,6 +7,7 @@ import vite.common.TUtil;
 import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
 import vite.mvp.base.BaseView;
+import vite.mvp.util.PageStateHelper;
 
 /**
  * 使用mvp模式的activity基类
@@ -15,11 +16,17 @@ import vite.mvp.base.BaseView;
 public abstract class MVPActivity<T extends BasePresenter, E extends BaseModel> extends BaseActivity {
     public T mPresenter;
 
+    private PageStateHelper mPageStateHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(getLayoutId());
+        final int layoutId = getLayoutId(mPageStateHelper);
+        if (mPageStateHelper != null)
+            setContentView(mPageStateHelper.getView());
+        else
+            setContentView(layoutId);
 
         ButterKnife.bind(this);
         mPresenter = TUtil.getT(this, 0);
@@ -45,7 +52,7 @@ public abstract class MVPActivity<T extends BasePresenter, E extends BaseModel> 
      *
      * @return
      */
-    public abstract int getLayoutId();
+    public abstract int getLayoutId(PageStateHelper pageStateHelper);
 
     /**
      * 代替onCreate
