@@ -17,7 +17,7 @@ import vite.mvp.R;
 
 /**
  * 管理页面状态，辅助显示如网络异常、加载中等页面
- * 如果MVP的getLayoutId中对其初始化即可调用
+ * 在MVP的getLayoutId中对其初始化即可调用
  * <p>
  * Created by trs on 17-6-2.
  */
