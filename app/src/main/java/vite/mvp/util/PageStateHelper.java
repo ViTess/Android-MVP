@@ -16,6 +16,9 @@ import java.lang.ref.WeakReference;
 import vite.mvp.R;
 
 /**
+ * 管理页面状态，辅助显示如网络异常、加载中等页面
+ * 如果MVP的getLayoutId中对其初始化即可调用
+ * <p>
  * Created by trs on 17-6-2.
  */
 
@@ -90,7 +93,8 @@ public final class PageStateHelper {
     private void showDialogFragment(DialogFragment dialogFragment, String tag) {
         if (mFragmentManager != null) {
             mFragmentManager.executePendingTransactions();
-            if (dialogFragment != null && !dialogFragment.isVisible() && !dialogFragment.isAdded())
+            if (dialogFragment != null &&
+                    !dialogFragment.isAdded() && !dialogFragment.isVisible() && !dialogFragment.isRemoving())
                 dialogFragment.show(mFragmentManager, tag);
         }
     }
@@ -104,7 +108,8 @@ public final class PageStateHelper {
 
     private void dismiss(DialogFragment... dialogFragments) {
         for (DialogFragment df : dialogFragments) {
-            if (df != null && df.isAdded() && df.isVisible())
+            if (df != null && df.isAdded() &&
+                    df.getDialog() != null && df.getDialog().isShowing())
                 df.dismissAllowingStateLoss();
         }
     }

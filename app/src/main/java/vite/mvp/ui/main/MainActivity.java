@@ -1,6 +1,10 @@
 package vite.mvp.ui.main;
 
-import android.app.ProgressDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -22,7 +26,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
     TextView tv_main;
 
     @Override
-    public int getLayoutId() {
+    public int getLayoutId(PageStateHelper[] helper) {
 //        ProgressDialog pDialog = new ProgressDialog(this);
 //        pDialog.setMessage("loading...");
 //
@@ -31,6 +35,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
 //                .setLoading(pDialog)
 //                .create();
 
+
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,9 +43,10 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
             }
         };
 
-        mPageStateHelper = new PageStateHelper.Builder(this)
+        helper[0] = new PageStateHelper.Builder(this)
+                .setFragmentManager(getSupportFragmentManager())
                 .setContent(R.layout.activity_main)
-                .setLoading(R.layout.layout_loading)
+                .setLoading(new ProgressDialogFragment())
                 .setError(R.layout.layout_error)
                 .setNetError(R.layout.layout_neterror)
                 .setEmpty(R.layout.layout_empty)
@@ -59,27 +65,27 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
 
     @Override
     public void showContent() {
-        mPageStateHelper.showContent();
+        mPageStateHelper[0].showContent();
     }
 
     @Override
     public void showError() {
-        mPageStateHelper.showError();
+        mPageStateHelper[0].showError();
     }
 
     @Override
     public void showNetError() {
-        mPageStateHelper.showNetError();
+        mPageStateHelper[0].showNetError();
     }
 
     @Override
     public void showEmpty() {
-        mPageStateHelper.showEmpty();
+        mPageStateHelper[0].showEmpty();
     }
 
     @Override
     public void showLoading() {
-        mPageStateHelper.showLoading();
+        mPageStateHelper[0].showLoading();
     }
 
     @Override
@@ -104,5 +110,13 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
 
     public void retry() {
         LogUtil.v("MainActivity", "retry");
+    }
+
+    public static class ProgressDialogFragment extends DialogFragment {
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new AlertDialog.Builder(getActivity()).setTitle("Title").setMessage("loading")
+                    .create();
+        }
     }
 }

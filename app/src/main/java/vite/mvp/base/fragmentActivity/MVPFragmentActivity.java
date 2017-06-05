@@ -15,15 +15,16 @@ import vite.mvp.util.PageStateHelper;
 public abstract class MVPFragmentActivity<T extends BasePresenter, E extends BaseModel> extends BaseFragmentActivity {
     public T mPresenter;
 
-    protected PageStateHelper mPageStateHelper = PageStateHelper.NONE;
+    protected final PageStateHelper[] mPageStateHelper = new PageStateHelper[]{PageStateHelper.NONE};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final int layoutId = getLayoutId();
-        if (mPageStateHelper != null && mPageStateHelper.getView() != null)
-            setContentView(mPageStateHelper.getView());
+        final int layoutId = getLayoutId(mPageStateHelper);
+        final PageStateHelper helper = mPageStateHelper[0];
+        if (helper != PageStateHelper.NONE && helper.getView() != null)
+            setContentView(helper.getView());
         else
             setContentView(layoutId);
 
@@ -45,17 +46,17 @@ public abstract class MVPFragmentActivity<T extends BasePresenter, E extends Bas
             mPresenter.onDestory();
         }
 
-        if (mPageStateHelper != null)
-            mPageStateHelper.clear();
+        if (mPageStateHelper[0] != PageStateHelper.NONE)
+            mPageStateHelper[0].clear();
     }
 
     /**
      * 设置layout id
-     * 如要使用PageStateHelper请在getLayoutId里初始化
      *
+     * @param helper 传入数组方便在函数内修改引用参数，该数组只有一个值，平时用helper[0]表示使用
      * @return
      */
-    public abstract int getLayoutId();
+    public abstract int getLayoutId(PageStateHelper[] helper);
 
     /**
      * 代替onCreate
