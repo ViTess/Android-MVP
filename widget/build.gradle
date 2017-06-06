@@ -22,10 +22,8 @@ android {
     }
 }
 
-
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     compile deps.support_v7
-    compile deps.tkrefreshlayout
 }

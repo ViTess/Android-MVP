@@ -1,3 +1,3 @@
 控件库
 
-* tkrefreshlayout(下拉刷新库):[TwinklingRefreshLayout](https://github.com/lcodecorex/TwinklingRefreshLayout)
+* ptr(下拉刷新库):[Ultra Pull to Refresh with Load More](https://github.com/captainbupt/android-Ultra-Pull-To-Refresh-With-Load-More)
