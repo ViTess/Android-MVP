@@ -446,6 +446,10 @@ public final class PageStateHelper {
         }
     }
 
+    public static class PageStateHolder {
+        public PageStateHelper helper = PageStateHelper.NONE;
+    }
+
     public interface PageState {
         void showContent();
 

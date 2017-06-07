@@ -15,12 +15,12 @@ android {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
-        debug{
+        debug {
             minifyEnabled false
             applicationIdSuffix ".debug"
         }
     }
-    compileOptions{
+    compileOptions {
         sourceCompatibility = rootProject.ext.sourceCompatibility
         targetCompatibility = rootProject.ext.targetCompatibility
     }
@@ -43,4 +43,5 @@ dependencies {
     //butterknife
     compile deps.butterknife
     annotationProcessor deps.butterknife_compiler
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }

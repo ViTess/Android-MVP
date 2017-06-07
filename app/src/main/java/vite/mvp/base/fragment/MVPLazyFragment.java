@@ -13,6 +13,9 @@ import vite.mvp.base.BasePresenter;
 import vite.mvp.base.BaseView;
 import vite.mvp.util.PageStateHelper;
 
+import static vite.mvp.util.PageStateHelper.NONE;
+import static vite.mvp.util.PageStateHelper.PageStateHolder;
+
 /**
  * 懒加载
  * Created by trs on 17-6-2.
@@ -25,7 +28,7 @@ public abstract class MVPLazyFragment<T extends BasePresenter, E extends BaseMod
 
     public T mPresenter;
 
-    protected final PageStateHelper[] mPageStateHelper = new PageStateHelper[]{PageStateHelper.NONE};
+    protected final PageStateHolder mPageStateHolder = new PageStateHolder();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,8 +41,8 @@ public abstract class MVPLazyFragment<T extends BasePresenter, E extends BaseMod
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
 
-            final int layoutId = getLayoutId(mPageStateHelper);
-            final PageStateHelper helper = mPageStateHelper[0];
+            final int layoutId = getLayoutId(mPageStateHolder);
+            final PageStateHelper helper = mPageStateHolder.helper;
             if (helper != PageStateHelper.NONE && helper.getView() != null)
                 rootView = helper.getView();
             else
@@ -113,8 +116,8 @@ public abstract class MVPLazyFragment<T extends BasePresenter, E extends BaseMod
         super.onDestroy();
         resetFlag();
 
-        if (mPageStateHelper[0] != PageStateHelper.NONE)
-            mPageStateHelper[0].clear();
+        if (mPageStateHolder.helper != null && mPageStateHolder.helper != NONE)
+            mPageStateHolder.helper.clear();
     }
 
     private void resetFlag() {
@@ -126,10 +129,10 @@ public abstract class MVPLazyFragment<T extends BasePresenter, E extends BaseMod
     /**
      * 设置layout id
      *
-     * @param helper 传入数组方便在函数内修改引用参数，该数组只有一个值，平时用helper[0]表示使用
+     * @param holder
      * @return
      */
-    public abstract int getLayoutId(PageStateHelper[] helper);
+    public abstract int getLayoutId(PageStateHolder holder);
 
     /**
      * 代替onCreate，fragment可见时调用且只调用一次

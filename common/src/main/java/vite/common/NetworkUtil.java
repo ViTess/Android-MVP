@@ -9,15 +9,12 @@ import android.net.NetworkInfo;
  */
 
 public class NetworkUtil {
-    private final static String TAG = "NetworkUtil";
-
     public static final boolean isNetworkConnecting(Context context) {
         ConnectivityManager cm = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo current = cm.getActiveNetworkInfo();
-        if (current == null) {
+        if (current == null)
             return false;
-        }
         return (current.isAvailable());
     }
 }

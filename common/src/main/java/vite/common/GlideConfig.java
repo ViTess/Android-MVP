@@ -17,6 +17,7 @@ import com.bumptech.glide.module.GlideModule;
 import java.io.InputStream;
 
 /**
+ * glide配置
  * Created by trs on 17-5-27.
  */
 

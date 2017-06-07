@@ -1,7 +1,6 @@
 package vite.mvp.ui.main;
 
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
@@ -26,7 +25,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
     TextView tv_main;
 
     @Override
-    public int getLayoutId(PageStateHelper[] helper) {
+    public int getLayoutId(PageStateHelper.PageStateHolder holder) {
 //        ProgressDialog pDialog = new ProgressDialog(this);
 //        pDialog.setMessage("loading...");
 //
@@ -35,7 +34,6 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
 //                .setLoading(pDialog)
 //                .create();
 
-
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -43,7 +41,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
             }
         };
 
-        helper[0] = new PageStateHelper.Builder(this)
+        holder.helper = new PageStateHelper.Builder(this)
                 .setFragmentManager(getSupportFragmentManager())
                 .setContent(R.layout.activity_main)
                 .setLoading(new ProgressDialogFragment())
@@ -65,27 +63,27 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
 
     @Override
     public void showContent() {
-        mPageStateHelper[0].showContent();
+        mPageStateHolder.helper.showContent();
     }
 
     @Override
     public void showError() {
-        mPageStateHelper[0].showError();
+        mPageStateHolder.helper.showError();
     }
 
     @Override
     public void showNetError() {
-        mPageStateHelper[0].showNetError();
+        mPageStateHolder.helper.showNetError();
     }
 
     @Override
     public void showEmpty() {
-        mPageStateHelper[0].showEmpty();
+        mPageStateHolder.helper.showEmpty();
     }
 
     @Override
     public void showLoading() {
-        mPageStateHelper[0].showLoading();
+        mPageStateHolder.helper.showLoading();
     }
 
     @Override

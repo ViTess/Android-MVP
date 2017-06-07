@@ -45,10 +45,17 @@ ext {
             "glide_okhttp"              : 'com.github.bumptech.glide:okhttp3-integration:1.4.0@aar',
             "glide_transformation"      : 'jp.wasabeef:glide-transformations:2.0.2',
 
+            "keyboard_visibility_event" : 'net.yslibrary.keyboardvisibilityevent:keyboardvisibilityevent:2.1.0',
+
             "greendao"                  : 'org.greenrobot:greendao:3.2.2',
 
             //test
-            "android_test"              : 'com.android.support.test.espresso:espresso-core:2.2.2'
+            "android_test"              : 'com.android.support.test.espresso:espresso-core:2.2.2',
+
+            //内存泄露检测
+            //leakcanary用于debugCompile，no_op版本用于releaseCompile
+            "leakcanary"                : 'com.squareup.leakcanary:leakcanary-android:1.5.1',
+            "leakcanary_no_op"          : 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
     ]
 }
 
@@ -88,6 +95,9 @@ project(':app') {
         androidTestCompile(deps.android_test, {
             exclude group: 'com.android.support', module: 'support-annotations'
         })
+
+        releaseCompile deps.leakcanary_no_op
+        debugCompile deps.leakcanary
     }
 }
 

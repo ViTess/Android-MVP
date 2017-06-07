@@ -13,6 +13,9 @@ import vite.mvp.base.BasePresenter;
 import vite.mvp.base.BaseView;
 import vite.mvp.util.PageStateHelper;
 
+import static vite.mvp.util.PageStateHelper.NONE;
+import static vite.mvp.util.PageStateHelper.PageStateHolder;
+
 /**
  * Created by trs on 16-11-4.
  */
@@ -20,13 +23,13 @@ import vite.mvp.util.PageStateHelper;
 public abstract class MVPFragment<T extends BasePresenter, E extends BaseModel> extends BaseFragment {
     public T mPresenter;
 
-    protected final PageStateHelper[] mPageStateHelper = new PageStateHelper[]{PageStateHelper.NONE};
+    protected final PageStateHolder mPageStateHolder = new PageStateHolder();
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final int layoutId = getLayoutId(mPageStateHelper);
-        final PageStateHelper helper = mPageStateHelper[0];
+        final int layoutId = getLayoutId(mPageStateHolder);
+        final PageStateHelper helper = mPageStateHolder.helper;
         if (helper != PageStateHelper.NONE && helper.getView() != null)
             return helper.getView();
         else
@@ -59,17 +62,17 @@ public abstract class MVPFragment<T extends BasePresenter, E extends BaseModel> 
     public void onDestroy() {
         super.onDestroy();
 
-        if (mPageStateHelper[0] != PageStateHelper.NONE)
-            mPageStateHelper[0].clear();
+        if (mPageStateHolder.helper != null && mPageStateHolder.helper != NONE)
+            mPageStateHolder.helper.clear();
     }
 
     /**
      * 设置layout id
      *
-     * @param helper 传入数组方便在函数内修改引用参数，该数组只有一个值，平时用helper[0]表示使用
+     * @param holder
      * @return
      */
-    public abstract int getLayoutId(PageStateHelper[] helper);
+    public abstract int getLayoutId(PageStateHolder holder);
 
     /**
      * 代替onCreate

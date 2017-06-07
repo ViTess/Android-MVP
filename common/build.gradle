@@ -30,4 +30,5 @@ dependencies {
     compile deps.glide_okhttp
     compile deps.glide_transformation
     compile deps.gson
+    compile deps.keyboard_visibility_event
 }
