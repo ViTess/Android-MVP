@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import vite.common.TUtil;
 import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
@@ -21,17 +22,20 @@ import vite.mvp.base.BaseView;
 public abstract class MVPDialogFragment<T extends BasePresenter, E extends BaseModel> extends DialogFragment {
     public T mPresenter;
 
+    private Unbinder mButterKnifeUnBinder;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        return inflater.inflate(getLayoutId(), container, false);
+        View view = inflater.inflate(getLayoutId(), container, false);
+        mButterKnifeUnBinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
         mPresenter = TUtil.getT(this, 0);
         E model = TUtil.getT(this, 1);
         if (this instanceof BaseView) {
@@ -48,6 +52,7 @@ public abstract class MVPDialogFragment<T extends BasePresenter, E extends BaseM
             mPresenter.unsubscribe();
             mPresenter.onDestory();
         }
+        mButterKnifeUnBinder.unbind();
     }
 
     /**

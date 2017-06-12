@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import vite.common.TUtil;
 import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
@@ -24,22 +25,25 @@ public abstract class MVPFragment<T extends BasePresenter, E extends BaseModel> 
     public T mPresenter;
 
     protected final PageStateHolder mPageStateHolder = new PageStateHolder();
+    private Unbinder mButterKnifeUnBinder;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final int layoutId = getLayoutId(mPageStateHolder);
         final PageStateHelper helper = mPageStateHolder.helper;
+        View view;
         if (helper != PageStateHelper.NONE && helper.getView() != null)
-            return helper.getView();
+            view = helper.getView();
         else
-            return inflater.inflate(layoutId, container, false);
+            view = inflater.inflate(layoutId, container, false);
+        mButterKnifeUnBinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
         mPresenter = TUtil.getT(this, 0);
         E model = TUtil.getT(this, 1);
         if (this instanceof BaseView) {
@@ -56,6 +60,7 @@ public abstract class MVPFragment<T extends BasePresenter, E extends BaseModel> 
             mPresenter.unsubscribe();
             mPresenter.onDestory();
         }
+        mButterKnifeUnBinder.unbind();
     }
 
     @Override

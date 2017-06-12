@@ -24,11 +24,12 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile deps.support_v4
     compile deps.rxjava
     compile deps.rxandroid
+    compile deps.gson
+    compile deps.keyboard_visibility_event
     compile deps.glide
     compile deps.glide_okhttp
     compile deps.glide_transformation
-    compile deps.gson
-    compile deps.keyboard_visibility_event
 }

@@ -5,8 +5,12 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -19,10 +23,12 @@ import vite.mvp.util.ToastUtil;
 
 public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> implements MainContract.View {
 
-    @BindView(R.id.main_relative)
-    RelativeLayout rl_main;
+    @BindView(R.id.main_linear)
+    LinearLayout rl_main;
     @BindView(R.id.main_text)
     TextView tv_main;
+    @BindView(R.id.main_image)
+    ImageView iv_main;
 
     @Override
     public int getLayoutId(PageStateHelper.PageStateHolder holder) {
@@ -91,6 +97,11 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
         showContent();
         tv_main.setText(info.toString());
         rl_main.setEnabled(false);
+
+        Glide.with(this)
+                .load(info.getAvatarUrl())
+                .into(iv_main);
+
         ToastUtil.showShort("fetch data success!");
     }
 
@@ -101,7 +112,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
         tv_main.setText("Oh, something went wrong, please try again");
     }
 
-    @OnClick(R.id.main_relative)
+    @OnClick(R.id.main_linear)
     public void clickScreen() {
         mPresenter.getUserInfo("JakeWharton");
     }

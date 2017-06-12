@@ -53,3 +53,45 @@ public class GlideConfig implements GlideModule {
         LogUtil.v("GlideConfig", "registerComponents");
     }
 }
+
+
+//@GlideModule
+//public final class GlideConfig extends AppGlideModule {
+//    @Override
+//    public void applyOptions(Context context, GlideBuilder builder) {
+//        super.applyOptions(context, builder);
+////        builder.setDecodeFormat(DecodeFormat.PREFER_RGB_565);
+////        builder.setBitmapPool(new LruBitmapPool(200 * 1024 * 1024));
+////        builder.setMemoryCache(new LruResourceCache(100 * 1024 * 1024));
+//
+//        builder.setDecodeFormat(DecodeFormat.PREFER_ARGB_8888);
+//        MemorySizeCalculator calculator = new MemorySizeCalculator.Builder(context).build();
+//        int defaultMemoryCacheSize = calculator.getMemoryCacheSize();
+//        int defaultBitmapPoolSize = calculator.getBitmapPoolSize();
+//
+//        int customMemoryCacheSize = (int) (1.2 * defaultMemoryCacheSize);
+//        int customBitmapPoolSize = (int) (1.2 * defaultBitmapPoolSize);
+//
+//        builder.setMemoryCache(new LruResourceCache(customMemoryCacheSize));
+//        builder.setBitmapPool(new LruBitmapPool(customBitmapPoolSize));
+//        int diskCacheBytes = 104857600;  //100M
+//
+////        String downloadDirectoryPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+//        String downloadDirectoryPath = context.getExternalCacheDir().getAbsolutePath();
+//        builder.setDiskCache(new DiskLruCacheFactory(downloadDirectoryPath, diskCacheBytes));
+//        LogUtil.v("GlideConfig", "applyOptions");
+//    }
+//
+//    @Override
+//    public void registerComponents(Context context, Registry registry) {
+//        super.registerComponents(context, registry);
+////        registry.setMemoryCategory(MemoryCategory.LOW);
+//        registry.append(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory());
+//        LogUtil.v("GlideConfig", "registerComponents");
+//    }
+//
+//    @Override
+//    public boolean isManifestParsingEnabled() {
+//        return false;
+//    }
+//}

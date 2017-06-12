@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import vite.common.TUtil;
 import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
@@ -25,6 +26,7 @@ public abstract class MVPLazyFragment<T extends BasePresenter, E extends BaseMod
     private boolean isFragmentVisible;
     private boolean isFirstVisible;
     private View rootView;
+    private Unbinder mButterKnifeUnBinder;
 
     public T mPresenter;
 
@@ -40,16 +42,14 @@ public abstract class MVPLazyFragment<T extends BasePresenter, E extends BaseMod
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if (rootView == null) {
-
             final int layoutId = getLayoutId(mPageStateHolder);
             final PageStateHelper helper = mPageStateHolder.helper;
             if (helper != PageStateHelper.NONE && helper.getView() != null)
                 rootView = helper.getView();
             else
                 rootView = inflater.inflate(layoutId, container, false);
-
-            ButterKnife.bind(this, rootView);
         }
+        mButterKnifeUnBinder = ButterKnife.bind(this, rootView);
         return rootView;
     }
 
@@ -59,24 +59,24 @@ public abstract class MVPLazyFragment<T extends BasePresenter, E extends BaseMod
         //那么就等到rootView创建完后才回调onVisible()
         //保证onVisible()的回调发生在rootView创建完成之后，以便支持ui操作
 
-        if (rootView == null) {
-            rootView = view;
-            if (getUserVisibleHint()) {
-                if (isFirstVisible) {
-                    mPresenter = TUtil.getT(this, 0);
-                    E model = TUtil.getT(this, 1);
-                    if (this instanceof BaseView) {
-                        mPresenter.setModelAndView(model, this);
-                        mPresenter.subscribe();
-                    }
-                    init();
-
-                    isFirstVisible = false;
+//        if (rootView == null) {
+//            rootView = view;
+        if (getUserVisibleHint()) {
+            if (isFirstVisible) {
+                mPresenter = TUtil.getT(this, 0);
+                E model = TUtil.getT(this, 1);
+                if (this instanceof BaseView) {
+                    mPresenter.setModelAndView(model, this);
+                    mPresenter.subscribe();
                 }
-                onVisible();
-                isFragmentVisible = true;
+                init();
+
+                isFirstVisible = false;
             }
+            onVisible();
+            isFragmentVisible = true;
         }
+//        }
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -109,6 +109,7 @@ public abstract class MVPLazyFragment<T extends BasePresenter, E extends BaseMod
             mPresenter.unsubscribe();
             mPresenter.onDestory();
         }
+        mButterKnifeUnBinder.unbind();
     }
 
     @Override
