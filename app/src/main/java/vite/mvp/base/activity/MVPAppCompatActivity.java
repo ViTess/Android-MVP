@@ -1,4 +1,4 @@
-package vite.mvp.base.fragmentActivity;
+package vite.mvp.base.activity;
 
 import android.os.Bundle;
 
@@ -10,15 +10,15 @@ import vite.mvp.base.BaseView;
 import vite.mvp.util.PageStateHelper;
 
 import static vite.mvp.util.PageStateHelper.NONE;
-import static vite.mvp.util.PageStateHelper.PageStateHolder;
 
 /**
- * Created by trs on 16-11-4.
+ * Created by trs on 17-8-11.
  */
-public abstract class MVPFragmentActivity<T extends BasePresenter, E extends BaseModel> extends BaseFragmentActivity implements PageStateHelper.PageState {
+
+public abstract class MVPAppCompatActivity<T extends BasePresenter, E extends BaseModel> extends BaseAppCompatActivity implements PageStateHelper.PageState{
     public T mPresenter;
 
-    protected final PageStateHolder mPageStateHolder = new PageStateHolder();
+    protected final PageStateHelper.PageStateHolder mPageStateHolder = new PageStateHelper.PageStateHolder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public abstract class MVPFragmentActivity<T extends BasePresenter, E extends Bas
      * @param holder
      * @return
      */
-    public abstract int getLayoutId(PageStateHolder holder);
+    public abstract int getLayoutId(PageStateHelper.PageStateHolder holder);
 
     /**
      * 代替onCreate

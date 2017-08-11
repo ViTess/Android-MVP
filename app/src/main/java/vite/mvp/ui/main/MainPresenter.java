@@ -1,5 +1,9 @@
 package vite.mvp.ui.main;
 
+import android.util.Log;
+
+import com.trello.rxlifecycle2.android.ActivityEvent;
+
 import org.greenrobot.greendao.rx.RxDao;
 
 import io.reactivex.annotations.NonNull;
@@ -29,30 +33,13 @@ public class MainPresenter extends MainContract.Presenter {
     @Override
     void getUserInfo(String userName) {
         mModel.getUserInfo(userName)
-                .doOnSubscribe(new Consumer<Disposable>() {
-                    @Override
-                    public void accept(@NonNull Disposable disposable) throws Exception {
-                        mView.showLoading();
-                    }
-                })
-                .subscribe(new Consumer<UserInfo>() {
-                    @Override
-                    public void accept(@NonNull UserInfo userInfo) throws Exception {
-                        //onNext
-                        mView.showLoadUserInfoSuccess(userInfo);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(@NonNull Throwable throwable) throws Exception {
-                        //onError
-                        mView.showLoadUserInfoFailure();
-                        throwable.printStackTrace();
-                    }
-                }, new Action() {
+                .doOnDispose(new Action() {
                     @Override
                     public void run() throws Exception {
-                        //onComplete
+                        Log.i("MainPresenter", "Unsubscribing subscription from onCreate()");
                     }
-                });
+                })
+                .compose(mView.<UserInfo>bindUntilEvent(ActivityEvent.DESTROY))
+                .subscribe(mView.showUserInfo());
     }
 }

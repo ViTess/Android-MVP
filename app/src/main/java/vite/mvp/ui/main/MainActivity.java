@@ -14,6 +14,9 @@ import com.bumptech.glide.Glide;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
 import vite.common.LogUtil;
 import vite.data.entity.UserInfo;
 import vite.mvp.R;
@@ -30,16 +33,40 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
     @BindView(R.id.main_image)
     ImageView iv_main;
 
+    private Observer<UserInfo> mShowUserInfo = new Observer<UserInfo>() {
+        @Override
+        public void onSubscribe(@NonNull Disposable d) {
+            showLoading();
+        }
+
+        @Override
+        public void onNext(@NonNull UserInfo userInfo) {
+            showContent();
+            tv_main.setText(userInfo.toString());
+            rl_main.setEnabled(false);
+
+            Glide.with(context)
+                    .load(userInfo.getAvatarUrl())
+                    .into(iv_main);
+
+            ToastUtil.showShort("fetch data success!");
+        }
+
+        @Override
+        public void onError(@NonNull Throwable e) {
+            showContent();
+            rl_main.setEnabled(true);
+            tv_main.setText("Oh, something went wrong, please try again");
+        }
+
+        @Override
+        public void onComplete() {
+            LogUtil.v("MainActivity", "retry");
+        }
+    };
+
     @Override
     public int getLayoutId(PageStateHelper.PageStateHolder holder) {
-//        ProgressDialog pDialog = new ProgressDialog(this);
-//        pDialog.setMessage("loading...");
-//
-//        mPageStateHelper = new PageStateHelper.Builder(this)
-//                .setContent(R.layout.activity_main)
-//                .setLoading(pDialog)
-//                .create();
-
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -68,48 +95,8 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
     }
 
     @Override
-    public void showContent() {
-        mPageStateHolder.helper.showContent();
-    }
-
-    @Override
-    public void showError() {
-        mPageStateHolder.helper.showError();
-    }
-
-    @Override
-    public void showNetError() {
-        mPageStateHolder.helper.showNetError();
-    }
-
-    @Override
-    public void showEmpty() {
-        mPageStateHolder.helper.showEmpty();
-    }
-
-    @Override
-    public void showLoading() {
-        mPageStateHolder.helper.showLoading();
-    }
-
-    @Override
-    public void showLoadUserInfoSuccess(UserInfo info) {
-        showContent();
-        tv_main.setText(info.toString());
-        rl_main.setEnabled(false);
-
-        Glide.with(this)
-                .load(info.getAvatarUrl())
-                .into(iv_main);
-
-        ToastUtil.showShort("fetch data success!");
-    }
-
-    @Override
-    public void showLoadUserInfoFailure() {
-        showContent();
-        rl_main.setEnabled(true);
-        tv_main.setText("Oh, something went wrong, please try again");
+    public Observer<UserInfo> showUserInfo() {
+        return mShowUserInfo;
     }
 
     @OnClick(R.id.main_linear)

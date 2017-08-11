@@ -19,7 +19,7 @@ import vite.mvp.base.BaseView;
  * Created by trs on 17-5-27.
  */
 
-public abstract class MVPDialogFragment<T extends BasePresenter, E extends BaseModel> extends DialogFragment {
+public abstract class MVPDialogFragment<T extends BasePresenter, E extends BaseModel> extends BaseDialogFragment {
     public T mPresenter;
 
     private Unbinder mButterKnifeUnBinder;

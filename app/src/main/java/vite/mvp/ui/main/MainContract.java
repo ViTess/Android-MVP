@@ -1,6 +1,7 @@
 package vite.mvp.ui.main;
 
 import io.reactivex.Observable;
+import io.reactivex.Observer;
 import vite.data.entity.UserInfo;
 import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
@@ -16,9 +17,8 @@ public interface MainContract {
         Observable<UserInfo> getUserInfo(String userName);
     }
 
-    interface View extends BaseView ,PageStateHelper.PageState{
-        void showLoadUserInfoSuccess(UserInfo info);
-        void showLoadUserInfoFailure();
+    interface View extends BaseView{
+        Observer<UserInfo> showUserInfo();
     }
 
     abstract class Presenter extends BasePresenter<Model, View> {

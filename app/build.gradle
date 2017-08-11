@@ -40,6 +40,8 @@ dependencies {
     //rxjava
     compile deps.rxandroid
     compile deps.rxjava
+    compile deps.rxlifecycle
+    compile deps.rxlifecycle_components
     //butterknife
     compile deps.butterknife
     annotationProcessor deps.butterknife_compiler

@@ -16,7 +16,7 @@ import static vite.mvp.util.PageStateHelper.PageStateHolder;
  * 使用mvp模式的activity基类
  * Created by trs on 16-10-18.
  */
-public abstract class MVPActivity<T extends BasePresenter, E extends BaseModel> extends BaseActivity {
+public abstract class MVPActivity<T extends BasePresenter, E extends BaseModel> extends BaseActivity{
     public T mPresenter;
 
     protected final PageStateHolder mPageStateHolder = new PageStateHolder();

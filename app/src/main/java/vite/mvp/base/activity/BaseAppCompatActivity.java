@@ -1,16 +1,15 @@
 package vite.mvp.base.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.trello.rxlifecycle2.components.RxActivity;
+import com.trello.rxlifecycle2.components.support.RxAppCompatActivity;
 
 /**
- * Activity基类
- * Created by trs on 16-10-18.
+ * Created by trs on 17-8-11.
  */
-public class BaseActivity extends RxActivity {
+
+public class BaseAppCompatActivity extends RxAppCompatActivity {
     protected Context context;
 
     @Override

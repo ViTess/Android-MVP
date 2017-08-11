@@ -4,16 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.trello.rxlifecycle2.components.support.RxFragment;
+import com.trello.rxlifecycle2.components.support.RxDialogFragment;
 
 /**
- * Created by qktang on 2016/11/3.
+ * Created by trs on 17-8-11.
  */
 
-public class BaseFragment extends RxFragment {
+public class BaseDialogFragment extends RxDialogFragment{
     protected Context context;
     protected Activity activity;
 
