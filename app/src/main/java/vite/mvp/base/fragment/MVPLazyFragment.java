@@ -58,8 +58,9 @@ public abstract class MVPLazyFragment<P extends BasePresenter> extends BaseFragm
             if (isFirstVisible) {
                 mPresenter = TUtil.getT(this, 0);
                 mPresenter.setView(this);
-                mPresenter.subscribe();
+
                 init();
+                mPresenter.subscribe();
 
                 isFirstVisible = false;
             }

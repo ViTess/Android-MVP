@@ -30,9 +30,9 @@ public abstract class MVPActivity<P extends BasePresenter> extends BaseActivity 
         mPresenter = TUtil.getT(this, 0);
 
         mPresenter.setView(this);
-        mPresenter.subscribe();
 
         init();
+        mPresenter.subscribe();
     }
 
     @Override

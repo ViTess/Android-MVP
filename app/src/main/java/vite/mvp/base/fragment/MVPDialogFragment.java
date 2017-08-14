@@ -36,8 +36,9 @@ public abstract class MVPDialogFragment<P extends BasePresenter> extends BaseDia
         super.onViewCreated(view, savedInstanceState);
         mPresenter = TUtil.getT(this, 0);
         mPresenter.setView(this);
-        mPresenter.subscribe();
+
         init();
+        mPresenter.subscribe();
     }
 
     @Override

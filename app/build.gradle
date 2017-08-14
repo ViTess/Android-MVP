@@ -42,6 +42,7 @@ dependencies {
     compile deps.rxjava
     compile deps.rxlifecycle
     compile deps.rxlifecycle_components
+    compile deps.rxbinding
     //butterknife
     compile deps.butterknife
     annotationProcessor deps.butterknife_compiler

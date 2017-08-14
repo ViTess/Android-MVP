@@ -10,5 +10,4 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
  */
 
 public interface BaseView {
-    <T> LifecycleTransformer<T> bindUntilEvent(@NonNull ActivityEvent event);
 }

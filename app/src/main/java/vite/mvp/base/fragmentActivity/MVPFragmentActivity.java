@@ -28,8 +28,9 @@ public abstract class MVPFragmentActivity<P extends BasePresenter> extends BaseF
         ButterKnife.bind(this);
         mPresenter = TUtil.getT(this, 0);
         mPresenter.setView(this);
-        mPresenter.subscribe();
+
         init();
+        mPresenter.subscribe();
     }
 
     @Override

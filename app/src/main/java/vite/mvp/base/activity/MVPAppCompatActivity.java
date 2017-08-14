@@ -29,8 +29,9 @@ public abstract class MVPAppCompatActivity<P extends BasePresenter> extends Base
         ButterKnife.bind(this);
         mPresenter = TUtil.getT(this, 0);
         mPresenter.setView(this);
-        mPresenter.subscribe();
+
         init();
+        mPresenter.subscribe();
     }
 
     @Override

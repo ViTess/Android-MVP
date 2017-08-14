@@ -12,12 +12,17 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.jakewharton.rxbinding2.view.RxView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import io.reactivex.Observable;
 import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import vite.api.NoNetworkException;
 import vite.common.LogUtil;
 import vite.data.entity.UserInfo;
@@ -37,42 +42,8 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter> implements 
 
     private PageStateHelper mPageStateHelper;
 
-    private Observer<UserInfo> mShowUserInfo = new Observer<UserInfo>() {
-        @Override
-        public void onSubscribe(@NonNull Disposable d) {
-            showLoading();
-        }
-
-        @Override
-        public void onNext(@NonNull UserInfo userInfo) {
-            showContent();
-            tv_main.setText(userInfo.toString());
-            rl_main.setEnabled(false);
-
-            Glide.with(context)
-                    .load(userInfo.getAvatarUrl())
-                    .into(iv_main);
-
-            ToastUtil.showShort("fetch data success!");
-        }
-
-        @Override
-        public void onError(@NonNull Throwable e) {
-            Log.i("MainActivity", e.toString());
-            if (e instanceof NoNetworkException) {
-                showNetError();
-            } else {
-                showContent();
-                rl_main.setEnabled(true);
-                tv_main.setText("Oh, something went wrong, please try again");
-            }
-        }
-
-        @Override
-        public void onComplete() {
-            LogUtil.v("MainActivity", "retry");
-        }
-    };
+    private Observer<UserInfo> mShowUserInfoObserver;
+    private Observable<String> mClickScreenObservable;
 
     @Override
     public int getLayoutId() {
@@ -115,12 +86,65 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter> implements 
     }
 
     public Observer<UserInfo> showUserInfo() {
-        return mShowUserInfo;
+        if (mShowUserInfoObserver == null) {
+            mShowUserInfoObserver = new Observer<UserInfo>() {
+                @Override
+                public void onSubscribe(@NonNull Disposable d) {
+                    Log.i("MainActivity", "showUserInfo onSubscribe");
+                }
+
+                @Override
+                public void onNext(@NonNull UserInfo userInfo) {
+                    showContent();
+                    tv_main.setText(userInfo.toString());
+//                    rl_main.setEnabled(false);
+
+                    Glide.with(context)
+                            .load(userInfo.getAvatarUrl())
+                            .into(iv_main);
+
+                    ToastUtil.showShort("fetch data success!");
+                }
+
+                @Override
+                public void onError(@NonNull Throwable e) {
+                    Log.i("MainActivity", e.toString());
+                    if (e instanceof NoNetworkException) {
+                        showNetError();
+                    } else {
+                        showContent();
+                        rl_main.setEnabled(true);
+                        tv_main.setText("Oh, something went wrong, please try again");
+                    }
+                }
+
+                @Override
+                public void onComplete() {
+                    LogUtil.v("MainActivity", "retry");
+                }
+            };
+        }
+        return mShowUserInfoObserver;
     }
 
-    @OnClick(R.id.main_linear)
-    public void clickScreen() {
-        mPresenter.getUserInfo("JakeWharton");
+    public Observable<String> clickScreen() {
+        //注意使用RxBinding要手动dispose，否则会对view持有强引用
+        if (mClickScreenObservable == null) {
+            mClickScreenObservable = RxView.clicks(rl_main)
+                    .map(new Function<Object, String>() {
+                        @Override
+                        public String apply(@NonNull Object o) throws Exception {
+                            return "JakeWharton";
+                        }
+                    })
+                    .doOnNext(new Consumer<String>() {
+                        @Override
+                        public void accept(String s) throws Exception {
+                            showLoading();
+                        }
+                    });
+        }
+        return mClickScreenObservable;
     }
 
     public void retry() {

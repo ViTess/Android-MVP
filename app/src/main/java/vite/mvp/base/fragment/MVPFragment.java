@@ -38,8 +38,9 @@ public abstract class MVPFragment<P extends BasePresenter> extends BaseFragment 
         super.onViewCreated(view, savedInstanceState);
         mPresenter = TUtil.getT(this, 0);
         mPresenter.setView(this);
-        mPresenter.subscribe();
+
         init();
+        mPresenter.subscribe();
     }
 
     @Override

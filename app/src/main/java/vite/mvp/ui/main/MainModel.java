@@ -16,7 +16,6 @@ public class MainModel {
 
     public Observable<UserInfo> getUserInfo(String userName) {
         return API.getService(ApiService.class)
-                .getUserInfo(userName)
-                .compose(RxUtil.<UserInfo>observable_io2main());
+                .getUserInfo(userName);
     }
 }
