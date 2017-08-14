@@ -33,6 +33,8 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
     @BindView(R.id.main_image)
     ImageView iv_main;
 
+    private PageStateHelper mPageStateHelper;
+
     private Observer<UserInfo> mShowUserInfo = new Observer<UserInfo>() {
         @Override
         public void onSubscribe(@NonNull Disposable d) {
@@ -66,7 +68,12 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
     };
 
     @Override
-    public int getLayoutId(PageStateHelper.PageStateHolder holder) {
+    public int getLayoutId() {
+        return 0;
+    }
+
+    @Override
+    protected View getLayoutView() {
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,7 +81,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
             }
         };
 
-        holder.helper = new PageStateHelper.Builder(this)
+        mPageStateHelper = new PageStateHelper.Builder(this)
                 .setFragmentManager(getSupportFragmentManager())
                 .setContent(R.layout.activity_main)
                 .setLoading(new ProgressDialogFragment())
@@ -85,13 +92,19 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
                 .setNetErrorRetry(R.id.layout_net_error_retry_btn, listener)
                 .setEmptyRetry(R.id.layout_empty_retry_btn, listener)
                 .create();
-
-        return R.layout.activity_main;
+        return mPageStateHelper.getView();
     }
 
     @Override
     public void init() {
         tv_main.setText("Click screen to get user info!");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mPageStateHelper != null)
+            mPageStateHelper.clear();
     }
 
     @Override
@@ -106,6 +119,31 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
 
     public void retry() {
         LogUtil.v("MainActivity", "retry");
+    }
+
+    @Override
+    public void showContent() {
+        mPageStateHelper.showContent();
+    }
+
+    @Override
+    public void showError() {
+        mPageStateHelper.showError();
+    }
+
+    @Override
+    public void showNetError() {
+        mPageStateHelper.showNetError();
+    }
+
+    @Override
+    public void showEmpty() {
+        mPageStateHelper.showEmpty();
+    }
+
+    @Override
+    public void showLoading() {
+        mPageStateHelper.showLoading();
     }
 
     public static class ProgressDialogFragment extends DialogFragment {

@@ -12,10 +12,6 @@ import vite.common.TUtil;
 import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
 import vite.mvp.base.BaseView;
-import vite.mvp.util.PageStateHelper;
-
-import static vite.mvp.util.PageStateHelper.NONE;
-import static vite.mvp.util.PageStateHelper.PageStateHolder;
 
 /**
  * Created by trs on 16-11-4.
@@ -24,18 +20,15 @@ import static vite.mvp.util.PageStateHelper.PageStateHolder;
 public abstract class MVPFragment<T extends BasePresenter, E extends BaseModel> extends BaseFragment {
     public T mPresenter;
 
-    protected final PageStateHolder mPageStateHolder = new PageStateHolder();
     private Unbinder mButterKnifeUnBinder;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final int layoutId = getLayoutId(mPageStateHolder);
-        final PageStateHelper helper = mPageStateHolder.helper;
-        View view;
-        if (helper != PageStateHelper.NONE && helper.getView() != null)
-            view = helper.getView();
-        else
+        final int layoutId = getLayoutId();
+
+        View view = getLayoutView();
+        if (view == null)
             view = inflater.inflate(layoutId, container, false);
         mButterKnifeUnBinder = ButterKnife.bind(this, view);
         return view;
@@ -66,18 +59,23 @@ public abstract class MVPFragment<T extends BasePresenter, E extends BaseModel> 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        if (mPageStateHolder.helper != null && mPageStateHolder.helper != NONE)
-            mPageStateHolder.helper.clear();
     }
 
     /**
      * 设置layout id
      *
-     * @param holder
      * @return
      */
-    public abstract int getLayoutId(PageStateHolder holder);
+    public abstract int getLayoutId();
+
+    /**
+     * 设置layout view
+     *
+     * @return
+     */
+    protected View getLayoutView() {
+        return null;
+    }
 
     /**
      * 代替onCreate

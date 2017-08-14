@@ -24,7 +24,7 @@ import vite.mvp.R;
 
 public final class PageStateHelper {
 
-    public static final PageStateHelper NONE = new PageStateHelper();
+//    public static final PageStateHelper NONE = new PageStateHelper();
 
     @LayoutRes
     private static final int sBaseLayoutId = R.layout.layout_basestatu;
@@ -444,10 +444,6 @@ public final class PageStateHelper {
             helper.create();
             return helper;
         }
-    }
-
-    public static class PageStateHolder {
-        public PageStateHelper helper = PageStateHelper.NONE;
     }
 
     public interface PageState {

@@ -1,6 +1,7 @@
 package vite.mvp.base.fragmentActivity;
 
 import android.os.Bundle;
+import android.view.View;
 
 import butterknife.ButterKnife;
 import vite.common.TUtil;
@@ -9,25 +10,20 @@ import vite.mvp.base.BasePresenter;
 import vite.mvp.base.BaseView;
 import vite.mvp.util.PageStateHelper;
 
-import static vite.mvp.util.PageStateHelper.NONE;
-import static vite.mvp.util.PageStateHelper.PageStateHolder;
-
 /**
  * Created by trs on 16-11-4.
  */
-public abstract class MVPFragmentActivity<T extends BasePresenter, E extends BaseModel> extends BaseFragmentActivity implements PageStateHelper.PageState {
+public abstract class MVPFragmentActivity<T extends BasePresenter, E extends BaseModel> extends BaseFragmentActivity {
     public T mPresenter;
-
-    protected final PageStateHolder mPageStateHolder = new PageStateHolder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        final int layoutId = getLayoutId(mPageStateHolder);
-        final PageStateHelper helper = mPageStateHolder.helper;
-        if (helper != PageStateHelper.NONE && helper.getView() != null)
-            setContentView(helper.getView());
+        final int layoutId = getLayoutId();
+        final View view = getLayoutView();
+        if (view != null)
+            setContentView(view);
         else
             setContentView(layoutId);
 
@@ -48,46 +44,26 @@ public abstract class MVPFragmentActivity<T extends BasePresenter, E extends Bas
             mPresenter.unsubscribe();
             mPresenter.onDestory();
         }
-
-        if (mPageStateHolder.helper != null && mPageStateHolder.helper != NONE)
-            mPageStateHolder.helper.clear();
     }
 
     /**
      * 设置layout id
      *
-     * @param holder
      * @return
      */
-    public abstract int getLayoutId(PageStateHolder holder);
+    public abstract int getLayoutId();
+
+    /**
+     * 设置layout view
+     *
+     * @return
+     */
+    protected View getLayoutView() {
+        return null;
+    }
 
     /**
      * 代替onCreate
      */
     public abstract void init();
-
-    @Override
-    public void showContent() {
-        mPageStateHolder.helper.showContent();
-    }
-
-    @Override
-    public void showError() {
-        mPageStateHolder.helper.showError();
-    }
-
-    @Override
-    public void showNetError() {
-        mPageStateHolder.helper.showNetError();
-    }
-
-    @Override
-    public void showEmpty() {
-        mPageStateHolder.helper.showEmpty();
-    }
-
-    @Override
-    public void showLoading() {
-        mPageStateHolder.helper.showLoading();
-    }
 }

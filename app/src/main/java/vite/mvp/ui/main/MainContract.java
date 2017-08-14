@@ -17,7 +17,7 @@ public interface MainContract {
         Observable<UserInfo> getUserInfo(String userName);
     }
 
-    interface View extends BaseView{
+    interface View extends BaseView, PageStateHelper.PageState {
         Observer<UserInfo> showUserInfo();
     }
 
