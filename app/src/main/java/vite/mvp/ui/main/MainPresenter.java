@@ -14,11 +14,14 @@ import vite.common.LogUtil;
 import vite.data.DbManager;
 import vite.data.entity.UserAccount;
 import vite.data.entity.UserInfo;
+import vite.mvp.base.BasePresenter;
 
 /**
  * Created by trs on 16-10-18.
  */
-public class MainPresenter extends MainContract.Presenter {
+public class MainPresenter extends BasePresenter<MainActivity> {
+
+    private MainModel mModel = new MainModel();
 
     @Override
     public void subscribe() {
@@ -30,7 +33,6 @@ public class MainPresenter extends MainContract.Presenter {
         LogUtil.e("MainPresenter", "unsubscribe");
     }
 
-    @Override
     void getUserInfo(String userName) {
         mModel.getUserInfo(userName)
                 .doOnDispose(new Action() {

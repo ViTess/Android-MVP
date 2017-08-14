@@ -133,4 +133,24 @@ final class Interceptors {
             return chain.proceed(builder.build());
         }
     }
+
+    /**
+     * 检查网络，无网络抛出
+     */
+    public static final class NetworkCheckInterceptor implements Interceptor {
+
+        private Context context;
+
+        public NetworkCheckInterceptor(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            if (!NetworkUtil.isNetworkConnecting(context)) {
+                throw new NoNetworkException();
+            }
+            return chain.proceed(chain.request());
+        }
+    }
 }

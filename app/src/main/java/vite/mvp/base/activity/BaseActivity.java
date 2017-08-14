@@ -1,6 +1,5 @@
 package vite.mvp.base.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -17,5 +16,20 @@ public class BaseActivity extends RxActivity {
     protected void onCreate(Bundle savedInstanceState) {
         context = this;
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

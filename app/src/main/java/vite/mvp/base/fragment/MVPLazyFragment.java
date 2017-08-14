@@ -6,25 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import vite.common.TUtil;
-import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
-import vite.mvp.base.BaseView;
 
 /**
  * 懒加载
  * Created by trs on 17-6-2.
  */
-public abstract class MVPLazyFragment<T extends BasePresenter, E extends BaseModel> extends BaseFragment {
+public abstract class MVPLazyFragment<P extends BasePresenter> extends BaseFragment {
 
     private boolean isFragmentVisible;
     private boolean isFirstVisible;
     private View rootView;
     private Unbinder mButterKnifeUnBinder;
 
-    public T mPresenter;
+    public P mPresenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -58,11 +57,8 @@ public abstract class MVPLazyFragment<T extends BasePresenter, E extends BaseMod
         if (getUserVisibleHint()) {
             if (isFirstVisible) {
                 mPresenter = TUtil.getT(this, 0);
-                E model = TUtil.getT(this, 1);
-                if (this instanceof BaseView) {
-                    mPresenter.setModelAndView(model, this);
-                    mPresenter.subscribe();
-                }
+                mPresenter.setView(this);
+                mPresenter.subscribe();
                 init();
 
                 isFirstVisible = false;

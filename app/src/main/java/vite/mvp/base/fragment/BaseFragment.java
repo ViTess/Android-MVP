@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.trello.rxlifecycle2.components.support.RxFragment;
@@ -32,6 +31,13 @@ public class BaseFragment extends RxFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    public void onResume() {
+        super.onResume();
+    }
+    public void onPause() {
+        super.onPause();
     }
 
     @Override

@@ -69,6 +69,7 @@ public class API {
         mOkHttpClient = new OkHttpClient.Builder()
 //                .cache(mCache = new Cache(sContext.getCacheDir(), CAHCE_SIZE))
                 .addInterceptor(new Interceptors.LoggerInterceptor("App"))//应用拦截
+                .addInterceptor(new Interceptors.NetworkCheckInterceptor(sContext))
 //                .addInterceptor(new Interceptors.CacheInterceptor(sContext))//缓存
                 .addNetworkInterceptor(new Interceptors.LoggerInterceptor("Network"))//网络拦截
 //                .addNetworkInterceptor(new Interceptors.CacheInterceptor(sContext))//缓存

@@ -2,25 +2,23 @@ package vite.mvp.base.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import vite.common.TUtil;
-import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
-import vite.mvp.base.BaseView;
 
 /**
  * Created by trs on 17-5-27.
  */
 
-public abstract class MVPDialogFragment<T extends BasePresenter, E extends BaseModel> extends BaseDialogFragment {
-    public T mPresenter;
+public abstract class MVPDialogFragment<P extends BasePresenter> extends BaseDialogFragment {
+    public P mPresenter;
 
     private Unbinder mButterKnifeUnBinder;
 
@@ -37,11 +35,8 @@ public abstract class MVPDialogFragment<T extends BasePresenter, E extends BaseM
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter = TUtil.getT(this, 0);
-        E model = TUtil.getT(this, 1);
-        if (this instanceof BaseView) {
-            mPresenter.setModelAndView(model, this);
-            mPresenter.subscribe();
-        }
+        mPresenter.setView(this);
+        mPresenter.subscribe();
         init();
     }
 

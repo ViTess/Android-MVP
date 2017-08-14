@@ -6,19 +6,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import vite.common.TUtil;
-import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
-import vite.mvp.base.BaseView;
 
 /**
  * Created by trs on 16-11-4.
  */
 
-public abstract class MVPFragment<T extends BasePresenter, E extends BaseModel> extends BaseFragment {
-    public T mPresenter;
+public abstract class MVPFragment<P extends BasePresenter> extends BaseFragment {
+    public P mPresenter;
 
     private Unbinder mButterKnifeUnBinder;
 
@@ -38,11 +37,8 @@ public abstract class MVPFragment<T extends BasePresenter, E extends BaseModel> 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mPresenter = TUtil.getT(this, 0);
-        E model = TUtil.getT(this, 1);
-        if (this instanceof BaseView) {
-            mPresenter.setModelAndView(model, this);
-            mPresenter.subscribe();
-        }
+        mPresenter.setView(this);
+        mPresenter.subscribe();
         init();
     }
 

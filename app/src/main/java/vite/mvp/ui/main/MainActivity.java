@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import butterknife.OnClick;
 import io.reactivex.Observer;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import vite.api.NoNetworkException;
 import vite.common.LogUtil;
 import vite.data.entity.UserInfo;
 import vite.mvp.R;
@@ -24,7 +26,7 @@ import vite.mvp.base.fragmentActivity.MVPFragmentActivity;
 import vite.mvp.util.PageStateHelper;
 import vite.mvp.util.ToastUtil;
 
-public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> implements MainContract.View {
+public class MainActivity extends MVPFragmentActivity<MainPresenter> implements PageStateHelper.PageState {
 
     @BindView(R.id.main_linear)
     LinearLayout rl_main;
@@ -56,9 +58,14 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
 
         @Override
         public void onError(@NonNull Throwable e) {
-            showContent();
-            rl_main.setEnabled(true);
-            tv_main.setText("Oh, something went wrong, please try again");
+            Log.i("MainActivity", e.toString());
+            if (e instanceof NoNetworkException) {
+                showNetError();
+            } else {
+                showContent();
+                rl_main.setEnabled(true);
+                tv_main.setText("Oh, something went wrong, please try again");
+            }
         }
 
         @Override
@@ -107,7 +114,6 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
             mPageStateHelper.clear();
     }
 
-    @Override
     public Observer<UserInfo> showUserInfo() {
         return mShowUserInfo;
     }
@@ -118,7 +124,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter, MainModel> 
     }
 
     public void retry() {
-        LogUtil.v("MainActivity", "retry");
+        LogUtil.i("MainActivity", "retry");
     }
 
     @Override

@@ -3,18 +3,16 @@ package vite.mvp.base.fragmentActivity;
 import android.os.Bundle;
 import android.view.View;
 
+
 import butterknife.ButterKnife;
 import vite.common.TUtil;
-import vite.mvp.base.BaseModel;
 import vite.mvp.base.BasePresenter;
-import vite.mvp.base.BaseView;
-import vite.mvp.util.PageStateHelper;
 
 /**
  * Created by trs on 16-11-4.
  */
-public abstract class MVPFragmentActivity<T extends BasePresenter, E extends BaseModel> extends BaseFragmentActivity {
-    public T mPresenter;
+public abstract class MVPFragmentActivity<P extends BasePresenter> extends BaseFragmentActivity {
+    public P mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,11 +27,8 @@ public abstract class MVPFragmentActivity<T extends BasePresenter, E extends Bas
 
         ButterKnife.bind(this);
         mPresenter = TUtil.getT(this, 0);
-        E model = TUtil.getT(this, 1);
-        if (this instanceof BaseView) {
-            mPresenter.setModelAndView(model, this);
-            mPresenter.subscribe();
-        }
+        mPresenter.setView(this);
+        mPresenter.subscribe();
         init();
     }
 

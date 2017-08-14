@@ -6,13 +6,11 @@ import io.reactivex.disposables.Disposable;
 /**
  * Created by trs on 16-10-18.
  */
-public abstract class BasePresenter<M, T> {
-    protected M mModel;
-    public T mView;
+public abstract class BasePresenter<V> {
+    public V mView;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-    public void setModelAndView(M model, T view) {
-        mModel = model;
+    public void setView(V view) {
         mView = view;
     }
 

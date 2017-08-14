@@ -2,7 +2,6 @@ package vite.mvp.base.fragmentActivity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import com.trello.rxlifecycle2.components.support.RxFragmentActivity;
@@ -20,5 +19,20 @@ public class BaseFragmentActivity extends RxFragmentActivity {
         super.onCreate(savedInstanceState);
         context = this;
         mFragmentManager = getSupportFragmentManager();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }
