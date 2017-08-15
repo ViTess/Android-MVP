@@ -16,6 +16,7 @@ public abstract class BasePresenter<V> {
 
     public void onDestory() {
         removeAllDispose();
+        mView = null;
     }
 
     /**

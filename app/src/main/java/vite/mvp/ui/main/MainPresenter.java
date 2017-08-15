@@ -17,6 +17,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import vite.api.NoNetworkException;
 import vite.common.LogUtil;
 import vite.data.DbManager;
 import vite.data.entity.UserAccount;
@@ -30,37 +31,60 @@ public class MainPresenter extends BasePresenter<MainActivity> {
 
     private MainModel mModel = new MainModel();
 
+    private Disposable mGetUserInfoDispose;
+
     @Override
     public void subscribe() {
         LogUtil.e("MainPresenter", "subscribe");
-        mView.clickScreen()
-                .flatMap(new Function<String, Observable<UserInfo>>() {
-                    @Override
-                    public Observable<UserInfo> apply(@NonNull String s) throws Exception {
-                        return mModel.getUserInfo(s)
-                                .doOnDispose(new Action() {
-                                    @Override
-                                    public void run() throws Exception {
-                                        LogUtil.e("MainPresenter", "Unsubscribing getUserInfo");
-                                    }
-                                })
-                                .subscribeOn(Schedulers.io())
-                                .compose(mView.<UserInfo>bindUntilEvent(ActivityEvent.PAUSE));
-                    }
-                })
-                .doOnDispose(new Action() {
-                    @Override
-                    public void run() throws Exception {
-                        LogUtil.e("MainPresenter", "Unsubscribing clickScreen from DESTORY");
-                    }
-                })
-                .observeOn(AndroidSchedulers.mainThread())
-                .compose(mView.<UserInfo>bindUntilEvent(ActivityEvent.DESTROY))
-                .subscribe(mView.showUserInfo());
     }
 
     @Override
     public void unsubscribe() {
         LogUtil.e("MainPresenter", "unsubscribe");
+    }
+
+    public void getUserInfo(String userName) {
+        if (mGetUserInfoDispose != null && !mGetUserInfoDispose.isDisposed())
+            mGetUserInfoDispose.dispose();
+        mGetUserInfoDispose = mModel.getUserInfo(userName)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe(new Consumer<Disposable>() {
+                    @Override
+                    public void accept(Disposable disposable) throws Exception {
+                        mView.showLoading();
+                    }
+                })
+                .doOnDispose(new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("MainPresenter", "Unsubscribing getUserInfo");
+                    }
+                })
+                .compose(mView.<UserInfo>bindUntilEvent(ActivityEvent.PAUSE))
+                .subscribe(new Consumer<UserInfo>() {
+                    @Override
+                    public void accept(UserInfo info) throws Exception {
+                        mView.showContent();
+                        mView.showUserInfo(info);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.i("MainActivity", throwable.toString());
+                        if (throwable instanceof NoNetworkException) {
+                            mView.showNetError();
+                        } else {
+                            mView.showContent();
+                            mView.showErrorMessage("Oh, something went wrong, please try again");
+                        }
+                    }
+                }, new Action() {
+                    @Override
+                    public void run() throws Exception {
+                        LogUtil.e("MainPresenter", "onComplete");
+                        mView.showContent();
+                    }
+                });
     }
 }

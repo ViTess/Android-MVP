@@ -42,9 +42,6 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter> implements 
 
     private PageStateHelper mPageStateHelper;
 
-    private Observer<UserInfo> mShowUserInfoObserver;
-    private Observable<String> mClickScreenObservable;
-
     @Override
     public int getLayoutId() {
         return 0;
@@ -79,76 +76,48 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter> implements 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        Glide.with(context).resumeRequests();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Glide.with(context).pauseRequests();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mPageStateHelper != null)
             mPageStateHelper.clear();
     }
 
-    public Observer<UserInfo> showUserInfo() {
-        if (mShowUserInfoObserver == null) {
-            mShowUserInfoObserver = new Observer<UserInfo>() {
-                @Override
-                public void onSubscribe(@NonNull Disposable d) {
-                    Log.i("MainActivity", "showUserInfo onSubscribe");
-                }
-
-                @Override
-                public void onNext(@NonNull UserInfo userInfo) {
-                    showContent();
-                    tv_main.setText(userInfo.toString());
+    public void showUserInfo(UserInfo userInfo) {
+        tv_main.setText(userInfo.toString());
 //                    rl_main.setEnabled(false);
 
-                    Glide.with(context)
-                            .load(userInfo.getAvatarUrl())
-                            .into(iv_main);
+        Glide.with(context)
+                .load(userInfo.getAvatarUrl())
+                .into(iv_main);
 
-                    ToastUtil.showShort("fetch data success!");
-                }
-
-                @Override
-                public void onError(@NonNull Throwable e) {
-                    Log.i("MainActivity", e.toString());
-                    if (e instanceof NoNetworkException) {
-                        showNetError();
-                    } else {
-                        showContent();
-                        rl_main.setEnabled(true);
-                        tv_main.setText("Oh, something went wrong, please try again");
-                    }
-                }
-
-                @Override
-                public void onComplete() {
-                    LogUtil.v("MainActivity", "retry");
-                }
-            };
-        }
-        return mShowUserInfoObserver;
+        ToastUtil.showShort("fetch data success!");
     }
 
-    public Observable<String> clickScreen() {
-        //注意使用RxBinding要手动dispose，否则会对view持有强引用
-        if (mClickScreenObservable == null) {
-            mClickScreenObservable = RxView.clicks(rl_main)
-                    .map(new Function<Object, String>() {
-                        @Override
-                        public String apply(@NonNull Object o) throws Exception {
-                            return "JakeWharton";
-                        }
-                    })
-                    .doOnNext(new Consumer<String>() {
-                        @Override
-                        public void accept(String s) throws Exception {
-                            showLoading();
-                        }
-                    });
-        }
-        return mClickScreenObservable;
+    public void showErrorMessage(String message) {
+        rl_main.setEnabled(true);
+        tv_main.setText(message);
+    }
+
+    @OnClick(R.id.main_linear)
+    public void clickScreen() {
+        mPresenter.getUserInfo("JakeWharton");
     }
 
     public void retry() {
         LogUtil.i("MainActivity", "retry");
+        mPresenter.getUserInfo("JakeWharton");
     }
 
     @Override
