@@ -1,16 +1,26 @@
 package vite.api;
 
 import android.content.Context;
+import android.text.TextUtils;
 
+import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.nio.charset.Charset;
 import java.util.HashSet;
 
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
+import okhttp3.MediaType;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
+import okio.Buffer;
+import okio.BufferedSource;
 import vite.common.LogUtil;
 import vite.common.NetworkUtil;
+import vite.common.decrypt.IDecryption;
 
 /**
  * 提供各种拦截器
@@ -22,7 +32,7 @@ final class Interceptors {
      * 打印用
      */
     public static final class LoggerInterceptor implements Interceptor {
-        private String tag;
+        private final String tag;
 
         public LoggerInterceptor(String tag) {
             this.tag = tag;
@@ -38,9 +48,11 @@ final class Interceptors {
 
             Response response = chain.proceed(request);
 
+            ResponseBody responseBody = response.peekBody(Long.MAX_VALUE);
+
             long t2 = System.nanoTime();
             LogUtil.i(tag, String.format("Received response for %s in %.1fms%n%s\n%s",
-                    response.request().url(), (t2 - t1) / 1e6d, response.headers(), request.body()));
+                    response.request().url(), (t2 - t1) / 1e6d, response.headers(), responseBody.string()));
             LogUtil.i(tag, "currentThread:" + Thread.currentThread());
             return response;
         }
@@ -92,10 +104,57 @@ final class Interceptors {
      * 加密拦截器，有的api可能需要在头部加上部分加密
      */
     public static final class EncryptInterceptor implements Interceptor {
-
         @Override
         public Response intercept(Chain chain) throws IOException {
             return null;
+        }
+    }
+
+    /**
+     * 解密拦截器
+     */
+    public static final class DecryptInterceptor implements Interceptor {
+
+        private static final Charset UTF8 = Charset.forName("UTF-8");
+
+        private final IDecryption mDecryption;
+
+        public DecryptInterceptor(IDecryption decryption) {
+            mDecryption = decryption;
+        }
+
+        @Override
+        public Response intercept(Chain chain) throws IOException {
+            Response response = chain.proceed(chain.request());
+            if (response.isSuccessful()) {
+                Response.Builder newResponse = response.newBuilder();
+
+                String contentType = response.header("Content-Type");
+                if (TextUtils.isEmpty(contentType))
+                    contentType = "application/json";
+
+                ResponseBody responseBody = response.body();
+                BufferedSource source = responseBody.source();
+                source.request(Long.MAX_VALUE); // Buffer the entire body.
+                Buffer buffer = source.buffer();
+
+                Charset charset = UTF8;
+                MediaType bodyContentType = responseBody.contentType();
+                if (bodyContentType != null)
+                    charset = bodyContentType.charset(UTF8);
+
+                if (responseBody.contentLength() != 0) {
+                    try {
+                        String decrypted = mDecryption.decrypt(buffer.readString(charset));
+
+                        newResponse.body(ResponseBody.create(MediaType.parse(contentType), decrypted));
+                        return newResponse.build();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            return response;
         }
     }
 
@@ -139,15 +198,15 @@ final class Interceptors {
      */
     public static final class NetworkCheckInterceptor implements Interceptor {
 
-        private Context context;
+        private WeakReference<Context> context;
 
         public NetworkCheckInterceptor(Context context) {
-            this.context = context;
+            this.context = new WeakReference<>(context.getApplicationContext());
         }
 
         @Override
         public Response intercept(Chain chain) throws IOException {
-            if (!NetworkUtil.isNetworkConnecting(context)) {
+            if (context.get() != null && !NetworkUtil.isNetworkConnecting(context.get())) {
                 throw new NoNetworkException();
             }
             return chain.proceed(chain.request());

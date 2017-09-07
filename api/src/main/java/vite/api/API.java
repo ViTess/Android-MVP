@@ -14,6 +14,8 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 import vite.api.service.ApiService;
+import vite.common.GsonUtil;
+import vite.common.decrypt.DecryptionFactory;
 
 /**
  * Created by trs on 17-5-27.
@@ -53,7 +55,7 @@ public class API {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .client(mOkHttpClient)
                 .addConverterFactory(ScalarsConverterFactory.create())//支持json -> string
-                .addConverterFactory(GsonConverterFactory.create())//支持json -> 实体类
+                .addConverterFactory(GsonConverterFactory.create(GsonUtil.getInstance()))//支持json -> 实体类
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
 
         if (ApiService.class.equals(c))
@@ -70,6 +72,7 @@ public class API {
 //                .cache(mCache = new Cache(sContext.getCacheDir(), CAHCE_SIZE))
                 .addInterceptor(new Interceptors.LoggerInterceptor("App"))//应用拦截
                 .addInterceptor(new Interceptors.NetworkCheckInterceptor(sContext))
+//                .addInterceptor(new Interceptors.DecryptInterceptor(DecryptionFactory.create(DecryptionFactory.AES)))//解密
 //                .addInterceptor(new Interceptors.CacheInterceptor(sContext))//缓存
                 .addNetworkInterceptor(new Interceptors.LoggerInterceptor("Network"))//网络拦截
 //                .addNetworkInterceptor(new Interceptors.CacheInterceptor(sContext))//缓存

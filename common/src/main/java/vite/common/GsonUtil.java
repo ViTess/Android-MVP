@@ -40,16 +40,15 @@ public class GsonUtil {
                 }
             });
 
-    private static volatile Gson sGson = null;
-
-    private static Gson getInstance() {
-        if (sGson == null) {
-            synchronized (GsonUtil.class) {
-                if (sGson == null)
-                    sGson = sGsonBuilder.create();
-            }
+    private static Singleton<Gson> gDefault = new Singleton<Gson>() {
+        @Override
+        protected Gson newInstance() {
+            return sGsonBuilder.create();
         }
-        return sGson;
+    };
+
+    public static Gson getInstance() {
+        return gDefault.getInstance();
     }
 
     public static <T> T fromJson(String json, Class<T> tClass) {
@@ -62,6 +61,11 @@ public class GsonUtil {
 
     public static <T> void registerTypeAdapter(Class<T> tClass, Object adapter) {
         sGsonBuilder.registerTypeAdapter(tClass, adapter);
-        sGson = sGsonBuilder.create();
+        gDefault = new Singleton<Gson>() {
+            @Override
+            protected Gson newInstance() {
+                return sGsonBuilder.create();
+            }
+        };
     }
 }
