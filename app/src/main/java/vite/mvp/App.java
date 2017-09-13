@@ -7,6 +7,10 @@ import com.bumptech.glide.Glide;
 import com.squareup.leakcanary.LeakCanary;
 
 import vite.api.API;
+import vite.common.thirdparty.crash.CrashManager;
+import vite.common.thirdparty.push.PushManager;
+import vite.common.thirdparty.statistic.StatisticManager;
+import vite.common.thirdparty.upgrade.UpgradeManager;
 import vite.data.DbManager;
 
 /**
@@ -24,9 +28,13 @@ public class App extends Application {
             return;
 
         sApp = this;
-        API.setApplicationContext(this);
-        DbManager.init(this);
+        StatisticManager.init(this);//统计
+        API.setApplicationContext(this);//网络模块
+        DbManager.init(this);//数据库
         Glide.get(this);
+        PushManager.init(this);//推送
+        CrashManager.init(this);//错误报告
+        UpgradeManager.init(this);//更新
     }
 
     /**
@@ -45,4 +53,5 @@ public class App extends Application {
     public static Context getAppContext() {
         return sApp;
     }
+
 }

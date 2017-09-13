@@ -32,4 +32,11 @@ dependencies {
     compile deps.glide
     compile deps.glide_okhttp
     compile deps.glide_transformation
+    compile deps.thirdlogin_wx
+    compile deps.thirdlogin_sina
+    compile deps.thirdstat_umeng
+    compile deps.thirdcrashreport_bugly
+    compile deps.thirdcrashreport_bugly_ndk
+    compile deps.thirdpush_jpush
+    compile deps.thirdpush_jcore
 }

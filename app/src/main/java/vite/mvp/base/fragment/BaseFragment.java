@@ -8,6 +8,8 @@ import android.view.View;
 
 import com.trello.rxlifecycle2.components.support.RxFragment;
 
+import vite.common.thirdparty.statistic.StatisticManager;
+
 /**
  * Created by qktang on 2016/11/3.
  */
@@ -35,9 +37,12 @@ public class BaseFragment extends RxFragment {
 
     public void onResume() {
         super.onResume();
+        StatisticManager.onResume(getContext());
     }
+
     public void onPause() {
         super.onPause();
+        StatisticManager.onResume(getContext());
     }
 
     @Override

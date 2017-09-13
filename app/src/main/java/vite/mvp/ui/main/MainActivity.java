@@ -113,6 +113,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter> implements 
     @OnClick(R.id.main_linear)
     public void clickScreen() {
         mPresenter.getUserInfo("JakeWharton");
+//        mPresenter.getTest();
     }
 
     public void retry() {

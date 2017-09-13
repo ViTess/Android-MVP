@@ -5,6 +5,8 @@ import android.os.Bundle;
 
 import com.trello.rxlifecycle2.components.RxActivity;
 
+import vite.common.thirdparty.statistic.StatisticManager;
+
 /**
  * Activity基类
  * Created by trs on 16-10-18.
@@ -21,11 +23,13 @@ public class BaseActivity extends RxActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        StatisticManager.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        StatisticManager.onPause(this);
     }
 
     @Override

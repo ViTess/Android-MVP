@@ -52,6 +52,23 @@ ext {
 
             "greendao"                  : 'org.greenrobot:greendao:3.2.2',
 
+            //第三方登录、分享
+            "thirdlogin_wx"             : 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+',
+            "thirdlogin_sina"           : 'com.sina.weibo.sdk:core:4.1.0:openDefaultRelease@aar',
+
+            //第三方统计
+            "thirdstat_umeng"           : 'com.umeng.analytics:analytics:latest.integration',
+
+            //第三方错误报告（当前bugly集成了升级）
+            "thirdcrashreport_bugly"    : 'com.tencent.bugly:crashreport_upgrade:latest.release',
+            "thirdcrashreport_bugly_ndk": 'com.tencent.bugly:nativecrashreport:latest.release',
+
+            //第三方升级（如果有）
+
+            //第三方推送
+            "thirdpush_jpush"           : 'cn.jiguang.sdk:jpush:latest.release',
+            "thirdpush_jcore"           : 'cn.jiguang.sdk:jcore:latest.release',
+
             //test
             "android_test"              : 'com.android.support.test.espresso:espresso-core:2.2.2',
 
@@ -63,6 +80,7 @@ ext {
     ]
 }
 
+//使用jpush的jcenter自动集成，需要在所有module的build脚本里加上manifestPlaceholders里的内容
 subprojects { project ->
     if (project.name != ('app')) {
         apply plugin: 'com.android.library'
@@ -70,6 +88,22 @@ subprojects { project ->
             publishNonDefault true
             defaultConfig {
                 consumerProguardFiles 'proguard-rules.pro'
+                manifestPlaceholders = [
+                        JPUSH_PKGNAME: "vite.mvp",
+                        JPUSH_APPKEY : "你的appkey", //JPush上注册的包名对应的appkey.
+                        JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+                ]
+            }
+        }
+    } else {
+        apply plugin: 'com.android.application'
+        android {
+            defaultConfig {
+                manifestPlaceholders = [
+                        JPUSH_PKGNAME: "vite.mvp",
+                        JPUSH_APPKEY : "你的appkey", //JPush上注册的包名对应的appkey.
+                        JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
+                ]
             }
         }
     }

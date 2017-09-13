@@ -1,7 +1,78 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="vite.common">
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_LOGS" />
+
     <application android:allowBackup="true"
                  android:label="@string/app_name"
                  android:supportsRtl="true">
+
+        <!-- module下的manifest会自动合并到app中 -->
+
+        <!--Weixin-->
+        <activity
+            android:name=".thirdparty.sso.wx.WXCallbackActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity-alias
+            android:name="vite.mvp.wxapi.WXEntryActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:targetActivity=".thirdparty.sso.wx.WXCallbackActivity"/>
+
+        <!--QQ-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data android:scheme="tencent{appid}"/><!-- 注意改为tencent appid -->
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <!--Umeng Statistic-->
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="your_app_key"/>
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="test"/>
+
+        <!--Bugly upgrade-->
+        <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|locale"
+            android:theme="@android:style/Theme.Translucent"/>
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="vite.mvp.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths"/>
+        </provider>
+
+        <!--Glide-->
+        <meta-data
+            android:name="vite.common.GlideConfig"
+            android:value="GlideModule"/>
+
     </application>
 </manifest>
