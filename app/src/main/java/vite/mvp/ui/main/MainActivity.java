@@ -4,30 +4,20 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.jakewharton.rxbinding2.view.RxView;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import io.reactivex.Observable;
-import io.reactivex.Observer;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import vite.api.NoNetworkException;
 import vite.common.LogUtil;
 import vite.data.entity.UserInfo;
 import vite.mvp.R;
 import vite.mvp.base.fragmentActivity.MVPFragmentActivity;
+import vite.mvp.presenter.main.MainPresenter;
 import vite.mvp.util.PageStateHelper;
 import vite.mvp.util.ToastUtil;
 

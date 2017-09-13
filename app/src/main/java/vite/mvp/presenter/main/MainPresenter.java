@@ -1,28 +1,20 @@
-package vite.mvp.ui.main;
+package vite.mvp.presenter.main;
 
 import android.util.Log;
-import android.view.View;
 
 import com.trello.rxlifecycle2.android.ActivityEvent;
 
-import org.greenrobot.greendao.rx.RxDao;
-
-import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.ObservableTransformer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 import vite.api.NoNetworkException;
 import vite.common.LogUtil;
-import vite.data.DbManager;
-import vite.data.entity.UserAccount;
 import vite.data.entity.UserInfo;
 import vite.mvp.base.BasePresenter;
+import vite.mvp.model.main.MainModel;
+import vite.mvp.ui.main.MainActivity;
 
 /**
  * Created by trs on 16-10-18.

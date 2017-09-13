@@ -25,3 +25,15 @@
 |Singleton|单例工具|
 |AppUtil|Application相关的信息操作|
 |TUtil|其余方法的集合|
+
+通用功能
+---
+
+|||
+|---|---|
+|DecryptionFactory|提供解密功能|
+|CrashManager|错误报告功能集成管理|
+|PushManager|推送功能集成管理|
+|SSOManager|社会化功能（分享、登录）集成管理|
+|StatisticManager|应用统计集成管理|
+|UpgradeManager|应用升级集成管理|

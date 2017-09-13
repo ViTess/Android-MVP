@@ -1,4 +1,4 @@
-package vite.mvp.ui.main;
+package vite.mvp.model.main;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
