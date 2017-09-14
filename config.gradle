@@ -1,6 +1,7 @@
 def supportVersion = "25.0.0"
 
 ext {
+    applicationId = "vite.mvp"
     compileSdkVersion = 24
     buildToolsVersion = "25.0.0"
     minSdkVersion = 15
@@ -89,7 +90,7 @@ subprojects { project ->
             defaultConfig {
                 consumerProguardFiles 'proguard-rules.pro'
                 manifestPlaceholders = [
-                        JPUSH_PKGNAME: "vite.mvp",
+                        JPUSH_PKGNAME: rootProject.ext.applicationId,
                         JPUSH_APPKEY : "你的appkey", //JPush上注册的包名对应的appkey.
                         JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
                 ]
@@ -100,7 +101,7 @@ subprojects { project ->
         android {
             defaultConfig {
                 manifestPlaceholders = [
-                        JPUSH_PKGNAME: "vite.mvp",
+                        JPUSH_PKGNAME: rootProject.ext.applicationId,
                         JPUSH_APPKEY : "你的appkey", //JPush上注册的包名对应的appkey.
                         JPUSH_CHANNEL: "developer-default", //暂时填写默认值即可.
                 ]
