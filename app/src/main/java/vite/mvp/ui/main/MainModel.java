@@ -1,4 +1,4 @@
-package vite.mvp.model.main;
+package vite.mvp.ui.main;
 
 import io.reactivex.Observable;
 import io.reactivex.annotations.NonNull;
@@ -12,7 +12,7 @@ import vite.data.entity.UserInfo;
  * Created by trs on 16-10-18.
  */
 
-public class MainModel {
+final class MainModel {
 
     public Observable<UserInfo> getUserInfo(String userName) {
         return API.getService(ApiService.class)

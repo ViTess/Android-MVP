@@ -17,11 +17,10 @@ import vite.common.LogUtil;
 import vite.data.entity.UserInfo;
 import vite.mvp.R;
 import vite.mvp.base.fragmentActivity.MVPFragmentActivity;
-import vite.mvp.presenter.main.MainPresenter;
 import vite.mvp.util.PageStateHelper;
 import vite.mvp.util.ToastUtil;
 
-public class MainActivity extends MVPFragmentActivity<MainPresenter> implements PageStateHelper.PageState {
+public class MainActivity extends MVPFragmentActivity<MainPresenter> implements Contract.View {
 
     @BindView(R.id.main_linear)
     LinearLayout rl_main;
@@ -84,6 +83,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter> implements 
             mPageStateHelper.clear();
     }
 
+    @Override
     public void showUserInfo(UserInfo userInfo) {
         tv_main.setText(userInfo.toString());
 //                    rl_main.setEnabled(false);
@@ -95,6 +95,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter> implements 
         ToastUtil.showShort("fetch data success!");
     }
 
+    @Override
     public void showErrorMessage(String message) {
         rl_main.setEnabled(true);
         tv_main.setText(message);
@@ -106,6 +107,7 @@ public class MainActivity extends MVPFragmentActivity<MainPresenter> implements 
 //        mPresenter.getTest();
     }
 
+    @Override
     public void retry() {
         LogUtil.i("MainActivity", "retry");
         mPresenter.getUserInfo("JakeWharton");

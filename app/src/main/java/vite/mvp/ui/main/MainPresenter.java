@@ -1,4 +1,4 @@
-package vite.mvp.presenter.main;
+package vite.mvp.ui.main;
 
 import android.util.Log;
 
@@ -13,13 +13,11 @@ import vite.api.NoNetworkException;
 import vite.common.LogUtil;
 import vite.data.entity.UserInfo;
 import vite.mvp.base.BasePresenter;
-import vite.mvp.model.main.MainModel;
-import vite.mvp.ui.main.MainActivity;
 
 /**
  * Created by trs on 16-10-18.
  */
-public class MainPresenter extends BasePresenter<MainActivity> {
+public class MainPresenter extends Contract.Presenter {
 
     private MainModel mModel = new MainModel();
 
