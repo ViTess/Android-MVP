@@ -24,7 +24,7 @@ public abstract class BasePresenter<V> {
      *
      * @param d
      */
-    public void addDispose(Disposable d) {
+    protected void addDispose(Disposable d) {
         if (mCompositeDisposable != null)
             mCompositeDisposable.add(d);
     }
@@ -34,12 +34,12 @@ public abstract class BasePresenter<V> {
      *
      * @param d
      */
-    public void removeDispose(Disposable d) {
+    protected void removeDispose(Disposable d) {
         if (mCompositeDisposable != null)
             mCompositeDisposable.remove(d);
     }
 
-    public void removeAllDispose() {
+    protected void removeAllDispose() {
         if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
             mCompositeDisposable.dispose();
     }
