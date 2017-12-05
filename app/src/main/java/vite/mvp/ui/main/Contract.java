@@ -1,8 +1,8 @@
 package vite.mvp.ui.main;
 
 import vite.data.entity.UserInfo;
+import vite.mvp.base.BaseActivityView;
 import vite.mvp.base.BasePresenter;
-import vite.mvp.base.BaseView;
 import vite.mvp.util.PageStateHelper;
 
 /**
@@ -10,7 +10,7 @@ import vite.mvp.util.PageStateHelper;
  */
 
 interface Contract {
-    interface View extends BaseView, PageStateHelper.PageState {
+    interface View extends BaseActivityView, PageStateHelper.PageState {
         void showUserInfo(UserInfo userInfo);
 
         void showErrorMessage(String message);

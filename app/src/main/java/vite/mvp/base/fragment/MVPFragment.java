@@ -39,7 +39,7 @@ public abstract class MVPFragment<P extends BasePresenter> extends BaseFragment 
         mPresenter = TUtil.getT(this, 0);
         mPresenter.setView(this);
 
-        init();
+        init(savedInstanceState);
         mPresenter.subscribe();
     }
 
@@ -77,5 +77,5 @@ public abstract class MVPFragment<P extends BasePresenter> extends BaseFragment 
     /**
      * 代替onCreate
      */
-    public abstract void init();
+    public abstract void init(@Nullable Bundle savedInstanceState);
 }

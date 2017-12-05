@@ -2,6 +2,7 @@ package vite.mvp.base.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +26,14 @@ public abstract class MVPDialogFragment<P extends BasePresenter> extends BaseDia
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-        View view = inflater.inflate(getLayoutId(), container, false);
+//        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+        final int layoutId = getLayoutId();
+
+        Log.i("MVPDialogFragment", "onCreateView");
+
+        View view = getLayoutView();
+        if (view == null)
+            view = inflater.inflate(layoutId, container, false);
         mButterKnifeUnBinder = ButterKnife.bind(this, view);
         return view;
     }
@@ -37,7 +44,7 @@ public abstract class MVPDialogFragment<P extends BasePresenter> extends BaseDia
         mPresenter = TUtil.getT(this, 0);
         mPresenter.setView(this);
 
-        init();
+        init(savedInstanceState);
         mPresenter.subscribe();
     }
 
@@ -59,7 +66,16 @@ public abstract class MVPDialogFragment<P extends BasePresenter> extends BaseDia
     public abstract int getLayoutId();
 
     /**
+     * 设置layout view
+     *
+     * @return
+     */
+    protected View getLayoutView() {
+        return null;
+    }
+
+    /**
      * 代替onCreate
      */
-    public abstract void init();
+    public abstract void init(@Nullable Bundle savedInstanceState);
 }

@@ -9,6 +9,6 @@ import com.trello.rxlifecycle2.android.ActivityEvent;
  * Created by trs on 16-10-18.
  */
 
-public interface BaseView {
+public interface BaseActivityView {
     <T> LifecycleTransformer<T> bindUntilEvent(@NonNull ActivityEvent event);
 }

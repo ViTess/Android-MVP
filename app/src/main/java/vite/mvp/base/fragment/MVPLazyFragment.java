@@ -18,6 +18,7 @@ import vite.mvp.base.BasePresenter;
  */
 public abstract class MVPLazyFragment<P extends BasePresenter> extends BaseFragment {
 
+    private boolean isViewFirstCreate;
     private boolean isFragmentVisible;
     private boolean isFirstVisible;
     private View rootView;
@@ -41,8 +42,15 @@ public abstract class MVPLazyFragment<P extends BasePresenter> extends BaseFragm
                 rootView = view;
             else
                 rootView = inflater.inflate(layoutId, container, false);
+            mButterKnifeUnBinder = ButterKnife.bind(this, rootView);
+
+            mPresenter = TUtil.getT(this, 0);
+            mPresenter.setView(this);
+
+            init(savedInstanceState);
+            mPresenter.subscribe();
+            isViewFirstCreate = true;
         }
-        mButterKnifeUnBinder = ButterKnife.bind(this, rootView);
         return rootView;
     }
 
@@ -54,18 +62,16 @@ public abstract class MVPLazyFragment<P extends BasePresenter> extends BaseFragm
 
 //        if (rootView == null) {
 //            rootView = view;
-        if (getUserVisibleHint()) {
+        if (isViewFirstCreate && getUserVisibleHint()) {
             if (isFirstVisible) {
-                mPresenter = TUtil.getT(this, 0);
-                mPresenter.setView(this);
-
-                init();
-                mPresenter.subscribe();
-
                 isFirstVisible = false;
+
+                //call lazyLoad
+                lazyLoad();
             }
             onVisible();
             isFragmentVisible = true;
+            isViewFirstCreate = false;
         }
 //        }
         super.onViewCreated(view, savedInstanceState);
@@ -79,7 +85,8 @@ public abstract class MVPLazyFragment<P extends BasePresenter> extends BaseFragm
             return;
         }
         if (isFirstVisible && isVisibleToUser) {
-            init();
+//            init();
+            lazyLoad();
             isFirstVisible = false;
         }
         if (isVisibleToUser) {
@@ -96,20 +103,28 @@ public abstract class MVPLazyFragment<P extends BasePresenter> extends BaseFragm
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (mPresenter != null) {
-            mPresenter.unsubscribe();
-            mPresenter.onDestory();
-        }
-        mButterKnifeUnBinder.unbind();
+//        if (mPresenter != null) {
+//            mPresenter.unsubscribe();
+//            mPresenter.onDestory();
+//        }
+//        mButterKnifeUnBinder.unbind();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         resetFlag();
+        if (mPresenter != null) {
+            mPresenter.unsubscribe();
+            mPresenter.onDestory();
+        }
+        if (mButterKnifeUnBinder != null) {
+            mButterKnifeUnBinder.unbind();
+        }
     }
 
     private void resetFlag() {
+        isViewFirstCreate = false;
         isFirstVisible = true;
         isFragmentVisible = false;
         rootView = null;
@@ -132,9 +147,15 @@ public abstract class MVPLazyFragment<P extends BasePresenter> extends BaseFragm
     }
 
     /**
-     * 代替onCreate，fragment可见时调用且只调用一次
+     * 代替onCreate，fragment创建时即调用，可在此初始化一些参数、界面等
      */
-    public abstract void init();
+    public abstract void init(@Nullable Bundle savedInstanceState);
+
+    /**
+     * 懒加载，仅调用一次，在fragment可见时才执行,可在此调用加载数据等操作，保证仅调用一次
+     * Presenter的subscribe在lazyload之前执行
+     */
+    public abstract void lazyLoad();
 
     /**
      * 当前fragment处于可见状态

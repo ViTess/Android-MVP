@@ -35,7 +35,7 @@ public final class StatisticManager {
 
     /**
      * @param context
-     * @param event see {@link com.tuboshu.danjuan.common.thirdparty.ThirdPartyConstants.StatisticEvent}
+     * @param event see {@link vite.common.thirdparty.ThirdPartyConstants.StatisticEvent}
      * @param params
      */
     public static void onEvent(Context context, String event, Map<String, String> params) {

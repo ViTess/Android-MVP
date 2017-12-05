@@ -1,6 +1,7 @@
 package vite.mvp.base.activity;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 
 
@@ -30,7 +31,7 @@ public abstract class MVPAppCompatActivity<P extends BasePresenter> extends Base
         mPresenter = TUtil.getT(this, 0);
         mPresenter.setView(this);
 
-        init();
+        init(savedInstanceState);
         mPresenter.subscribe();
     }
 
@@ -62,5 +63,5 @@ public abstract class MVPAppCompatActivity<P extends BasePresenter> extends Base
     /**
      * 代替onCreate
      */
-    public abstract void init();
+    public abstract void init(@Nullable Bundle savedInstanceState);
 }
